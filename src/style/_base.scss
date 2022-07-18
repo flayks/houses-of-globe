@@ -125,8 +125,12 @@ input[type="text"], input[type="email"], input[type="password"] {
         display: block;
     }
     a {
-        display: block;
-        padding: 12px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 64px;
+        padding: 12px 24px;
+        text-align: center;
         font-size: rem(20px);
         font-weight: 500;
         color: #fff;
@@ -134,6 +138,15 @@ input[type="text"], input[type="email"], input[type="password"] {
         border-radius: 100vh;
         border: 1px solid rgba($color-tertiary, 0.5);
         transition: all 0.5s var(--ease-quart);
+
+        & > * {
+            display: block;
+        }
+        span {
+            margin-top: 2px;
+            opacity: 0.5;
+            font-size: rem(13px);
+        }
 
         &:hover {
             background: rgba($color-tertiary, 0.2);

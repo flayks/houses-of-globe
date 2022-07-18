@@ -16,7 +16,7 @@
 
     const tempNavLinks = [
         { url: '/', text: 'Homepage', globe: 'Full Globe' },
-        { url: '/photos', text: 'Photos', globe: 'No globe' },
+        { url: '/photos', text: 'Photos', globe: 'No Globe' },
         { url: '/subscribe', text: 'Subscribe', globe: 'Cropped Globe' },
     ]
 
@@ -48,10 +48,11 @@
 
 <nav class="temp-nav">
     <ul>
-        {#each tempNavLinks as { url, text }}
+        {#each tempNavLinks as { url, text, globe }}
             <li class:is-active={url === $page.url.pathname}>
                 <a href={url} sveltekit:noscroll>
-                    {text}
+                    <strong>{text}</strong>
+                    <span>{globe}</span>
                 </a>
             </li>
         {/each}
