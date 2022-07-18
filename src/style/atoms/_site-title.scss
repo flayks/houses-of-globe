@@ -1,0 +1,74 @@
+.site-title {
+    font-family: $font-serif;
+
+    :global(.middle) {
+        position: relative;
+        top: -4px;
+        font-weight: 600;
+        color: $color-lightpurple;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+
+    /*
+    ** Variants
+    */
+    // Default: Two lines
+    &--lines {
+        line-height: clamp(100%, 1.5vw, 100%);
+        font-size: rem(30px);
+
+        @include bp (sm) {
+            font-size: clamp(#{rem(20px)}, 2.5vw, #{rem(30px)});
+        }
+
+        :global(.word-1) {
+            display: block;
+            color: $color-lilas-bright;
+        }
+        :global(.word-2) {
+            font-size: 0.45em;
+        }
+        :global(.word-3) {
+            display: inline-block;
+            margin-left: -0.023em;
+            color: $color-secondary;
+        }
+        :global(span) {
+            transition: color 0.25s;
+        }
+    }
+
+
+    // Inline Variant
+    &--inline {
+        display: block;
+        align-items: baseline;
+        color: $color-secondary;
+        justify-content: center;
+        font-size: rem(52px);
+
+        @include bp (mob-lg) {
+            font-size: rem(64px);
+        }
+        @include bp (sm) {
+            display: flex;
+            font-size: rem(96px);
+        }
+
+        :global(.middle) {
+            top: 0;
+            margin: 10px 0;
+            font-size: 0.3125em;
+
+            @include bp (sm) {
+                font-size: 0.333em;
+                margin: 0 10px 0 20px;
+            }
+        }
+        :global(.char) {
+            transition: none;
+        }
+    }
+}

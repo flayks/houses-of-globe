@@ -1,0 +1,127 @@
+.button-circle {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border-radius: 100vh;
+    transition: background-color 0.8s var(--ease-quart);
+
+    @include bp (md) {
+        width: 56px;
+        height: 56px;
+    }
+
+    & > :global(*) {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        width: clamp(16px, 50%, 24px);
+        height: clamp(16px, 50%, 24px);
+        transform-origin: center center;
+        transition: opacity 0.7s var(--ease-quart), transform 0.7s var(--ease-quart);
+
+        // Last clone
+        &:nth-child(2) {
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+            transform: translate3d(-150%, -50%, 0);
+        }
+    }
+
+
+    /*
+    ** States
+    */
+    // Hover
+    &.has-clone:not([disabled]):hover {
+        & > :global(*) {
+            &:first-child {
+                opacity: 0;
+                transform: scale(0.75) translate3d(20%, 0, 0);
+            }
+            &:last-child {
+                opacity: 1;
+                transform: translate3d(-50%, -50%, 0);
+            }
+        }
+
+    }
+
+    // Disabled
+    &[disabled] {
+        background: $color-primary;
+        border: 3px solid rgba(#fff, 0.2);
+
+        :global(svg) {
+            color: $color-primary-tertiary20;
+        }
+    }
+
+
+    /*
+    ** Variants
+    */
+    // Tiny size
+    &--tiny {
+        height: 24px !important;
+        width: 24px !important;
+
+        :global(img), :global(svg) {
+            width: 8px;
+            height: 8px;
+            object-fit: contain;
+        }
+    }
+
+    // Small size
+    &--small {
+        height: 32px !important;
+        width: 32px !important;
+
+        :global(img), :global(svg) {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+    }
+
+    // Pink color
+    &--pink {
+        background: $color-secondary;
+
+        &:hover {
+            background: darken($color-secondary, 7);
+        }
+    }
+
+    // Purple color
+    &--purple {
+        color: #fff;
+        background: $color-primary-tertiary20;
+
+        &:hover {
+            background: $color-lightpurple;
+        }
+    }
+
+    // Gray color
+    &--gray {
+        background: #F2F2F2;
+
+        &:hover {
+            background: #D2D2D2;
+        }
+    }
+
+    // Gray color
+    &--gray-medium {
+        background: $color-gray;
+    }
+}

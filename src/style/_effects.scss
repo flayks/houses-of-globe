@@ -1,0 +1,81 @@
+/*
+** Box shadows
+*/
+// Box: Dark
+.shadow-box-dark {
+    box-shadow:
+        0 6px 6px rgba(#000, 0.05),
+        0 12px 12px rgba(#000, 0.05),
+        0 24px 24px rgba(#000, 0.05);
+}
+
+// Box: Light
+.shadow-box-light {
+    box-shadow:
+        0 6px 6px rgba(#736356, 0.05),
+        0 12px 12px rgba(#736356, 0.05),
+        0 24px 24px rgba(#736356, 0.05);
+}
+
+// Box: Photo
+.shadow-photo {
+    $shadow-color: rgba(122, 93, 68, 0.075);
+    box-shadow:
+        0 1px 1px $shadow-color,
+        0 2px 2px $shadow-color,
+        0 4px 4px $shadow-color,
+        0 8px 8px $shadow-color,
+        0 16px 16px $shadow-color;
+}
+
+// Shadow: Small
+.shadow-small {
+    $shadow-color: rgba(122, 93, 68, 0.05);
+    box-shadow:
+        0 1px 1px $shadow-color,
+        0 2px 2px $shadow-color,
+        0 4px 4px $shadow-color,
+        0 16px 16px $shadow-color;
+}
+
+
+
+/*
+** Hovers
+*/
+// 3D effect link
+.link-3d {
+    overflow: hidden;
+
+    .text-split {
+        perspective: 300px;
+    }
+    .text-split__line {
+        --offset-y: 66%;
+        transform-origin: bottom center;
+
+        &:last-child {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: $color-secondary;
+            transform: translate3d(0, var(--offset-y), 0);
+            opacity: 0;
+        }
+    }
+    &:not([disabled]):hover {
+        .text-split__line {
+            &:first-child {
+                opacity: 0;
+                transform: scale(0.92) translate3d(0, 12%, 0);
+            }
+            &:last-child {
+                opacity: 1;
+                transform: translate3d(0,0,0);
+                transition-delay: 55ms;
+            }
+        }
+    }
+}

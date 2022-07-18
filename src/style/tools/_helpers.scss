@@ -1,0 +1,20 @@
+/* Classes
+========================================================================== */
+.clear {
+    @extend %clearfix;
+}
+
+
+/* Containers
+========================================================================== */
+// Wrap (global)
+.container {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
+
+    @include bp (sm) {
+        padding: 0;
+    }
+}

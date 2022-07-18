@@ -1,0 +1,22 @@
+{
+    "short_name": "Houses Of",
+    "name": "Houses Of - Beautiful houses around the world",
+    "description": "",
+    "icons": [
+        {
+            "src": "/images/siteicon-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/images/siteicon-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/?source=pwa",
+    "background_color": "#3C0576",
+    "display": "minimal-ui",
+    "scope": "/",
+    "theme_color": "#3C0576"
+}

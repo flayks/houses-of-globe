@@ -1,0 +1,66 @@
+// Subscribe Page
+.subscribe {
+    &__top {
+        // Email Form
+        :global(.newsletter-form) {
+            margin: 42px auto 70px;
+            padding: 0 20px;
+            max-width: max(432px, 70%);
+
+            @include bp (sm) {
+                max-width: 560px;
+                margin-top: 0;
+                margin-bottom: 120px;
+            }
+        }
+        :global(.newsletter-form__bottom) {
+            :global(p) {
+                color: rgba($color-tertiary, 0.6);
+            }
+        }
+    }
+
+    // Past Issues
+    &__issues {
+        margin: 64px auto 0;
+        padding: 0 20px;
+
+        @include bp (sm) {
+            max-width: 800px;
+            padding: 0;
+            margin-top: 0;
+        }
+
+        // Title
+        h2 {
+            text-align: center;
+        }
+
+        ul {
+            margin-top: 32px;
+
+            @include bp (sm) {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap: 24px;
+            }
+        }
+        li {
+            display: block;
+            margin-bottom: 16px;
+
+            @include bp (sm) {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+// Globe
+:global(.subscribe .globe-cropped) {
+    margin-top: 96px;
+
+    @include bp (sm) {
+        margin-top: 156px;
+    }
+}

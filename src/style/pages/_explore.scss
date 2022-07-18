@@ -1,0 +1,9 @@
+// Explore Page
+:global(.explore) {
+    overflow: hidden;
+}
+:global(.explore__locations) {
+    @include bp (sm, max) {
+        margin-top: 72px;
+    }
+}

@@ -1,0 +1,40 @@
+.grid-modules {
+    margin-bottom: 40px;
+
+    @include bp (sm) {
+        margin-bottom: 72px;
+    }
+
+    .wrap {
+        display: block;
+        grid-column: span var(--columns);
+
+        @include bp (sm) {
+            display: grid;
+            grid-column: 2 / span 22;
+        }
+        @include bp (sd) {
+            grid-template-columns: 1fr 40%;
+            grid-column-gap: clamp(32px, 2.5vw, 48px);
+        }
+
+        & > *:first-child {
+            @include bp (sd, max) {
+                margin-bottom: 20px;
+            }
+            @include bp (sd) {
+                margin-bottom: 0;
+            }
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // With padding
+    &.is-spaced {
+        @include bp (sm, max) {
+            padding: 0 16px;
+        }
+    }
+}

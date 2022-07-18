@@ -1,0 +1,182 @@
+// CSS Variables
+:root {
+    // Sizes
+    --container-width: #{$container-width};
+
+    // Animation
+    --ease-quart: cubic-bezier(.165, .84, .44, 1);
+    --ease-cubic: cubic-bezier(.785, .135, .15, .86);
+    --ease-inout-quart: cubic-bezier(.76, 0, .24, 1);
+}
+
+html {
+    font: #{$base-font-size}/1.2 $font-sans;
+    font-weight: 400;
+    color: #fff;
+    min-width: 320px;
+    word-break: normal;
+}
+body {
+    @include font-smooth;
+    background: $color-primary;
+    color: #fff;
+    cursor: default;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    padding-top: 150px;
+}
+*, *:before, *:after {
+    text-rendering: optimizeLegibility;
+}
+strong {
+    font-weight: 600;
+}
+em {
+    font-style: normal;
+}
+figure, p, dl, dt, dd, ul, ol, li {
+    margin: 0;
+    padding: 0;
+}
+figure, picture {
+    display: block;
+}
+nav li:before {
+    display: none;
+}
+label {
+    cursor: pointer;
+}
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:global([disabled]) {
+        cursor: not-allowed;
+    }
+}
+
+// Scrollbar
+html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba($color-tertiary, 0.6) $color-primary-darker;
+}
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: $color-primary-darker;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba($color-tertiary, 0.6);
+    border: 4px solid $color-primary-darker;
+    border-radius: 10px;
+}
+
+// Accessibility outline
+// Remove default focus styles for mouse users if :focus-visible is supported
+[data-js-focus-visible] :focus:not([data-focus-visible-added]) {
+    outline: none;
+}
+[data-focus-visible-added], *:focus-visible {
+    outline: 1px dashed $color-secondary;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+    outline: none;
+}
+
+// Selection
+::selection { color: #fff; background: $color-secondary; }
+::-moz-selection { color: #fff; background: $color-secondary; }
+
+// Images glitches fix
+// img {backface-visibility: hidden;}
+
+
+
+/* Titles
+========================================================================== */
+#{headings(1,6)} {
+    margin: 0;
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Global elements
+========================================================================== */
+// Temp nav
+.temp-nav {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: $color-primary;
+    padding: 40px 0;
+
+    ul {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+    li {
+        display: block;
+    }
+    a {
+        display: block;
+        padding: 12px 20px;
+        font-size: rem(20px);
+        font-weight: 500;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 100vh;
+        border: 1px solid rgba($color-tertiary, 0.5);
+        transition: all 0.5s var(--ease-quart);
+
+        &:hover {
+            background: rgba($color-tertiary, 0.2);
+        }
+    }
+    .is-active a {
+        background: $color-secondary;
+        color: #fff;
+        border-color: transparent;
+    }
+}
+
+// Split text elements
+.word, .char {
+    display: inline-block;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+.text-split {
+    span, &__line {
+        display: inline-block;
+        transition: opacity 0.7s var(--ease-quart), transform 0.7s var(--ease-quart);
+    }
+}
+
+// Mask for animations
+.mask {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+
+    span {
+        display: inline-block;
+    }
+}
+
+// Page loading overlay
+.page-loading {
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: wait;
+}

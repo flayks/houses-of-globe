@@ -1,0 +1,86 @@
+@use "sass:math";
+
+// Hide text
+%hide-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-indent: 200%;
+}
+
+// Clearfix
+%clearfix {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+// Get REM font-size and line-height
+@mixin fs-lh ($fontSize, $lineHeight) {
+    font-size: rem($fontSize);
+    line-height: math.div(round(math.div($lineHeight, $fontSize) * 1000), 1000);
+}
+
+// Top-right-bottom-left
+@mixin trbl ($value: 0) {
+    top: $value; right: $value; bottom: $value; left: $value;
+}
+
+// Smooth fonts
+@mixin font-smooth {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Font-face
+@mixin font-face ($family, $variant, $weight: normal, $style: normal, $display: swap) {
+    @font-face {
+        font-family: "#{$family}";
+        font-style: $style;
+        font-weight: $weight;
+        font-display: $display;
+        src: local("#{$variant}"),
+             url("#{$dir-fonts}/#{$variant}.woff2") format("woff2"),
+             url("#{$dir-fonts}/#{$variant}.woff") format("woff");
+    }
+}
+
+
+/*
+** Reponsive breakpoint
+*/
+// Based on Width
+@mixin bp ($size, $to: min, $sizes: $breakpoints) {
+    // Size is in map
+    @if map-has-key($sizes, $size) {
+        $size: map-get($sizes, $size);
+
+        @if ($to == max) {
+            @media (max-width: #{$size}) {
+                @content;
+            }
+        } @else {
+            @media (min-width: #{$size}) {
+                @content;
+            }
+        }
+    }
+    // Not in the map
+    @else {
+        @media (min-width: $size) { @content; }
+    }
+}
+
+// Based on Height
+@mixin bph ($size, $to: min, $sizes: $breakpoints) {
+    @if ($to == max) {
+        @media (max-height: #{$size}) {
+            @content;
+        }
+    } @else {
+        @media (min-height: #{$size}) {
+            @content;
+        }
+    }
+}

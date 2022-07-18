@@ -1,0 +1,37 @@
+.page-error {
+    // Top
+    &__top {
+        margin-bottom: 72px;
+
+        @include bp (sm) {
+            margin-bottom: 120px;
+        }
+
+        // Heading
+        :global(.heading) {
+            padding: 0 24px;
+            margin-bottom: 40px;
+
+            @include bp (sm) {
+                margin-bottom: 72px;
+            }
+
+            :global(p) {
+                @include bp (sm, max) {
+                    max-width: 480px;
+                }
+            }
+        }
+    }
+}
+
+:global(.page-error) {
+    // Globe
+    :global(.globe) {
+        margin-top: 96px;
+
+        @include bp (sm) {
+            margin-top: 156px;
+        }
+    }
+}

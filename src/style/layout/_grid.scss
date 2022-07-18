@@ -1,0 +1,14 @@
+/*
+** Grid
+*/
+.grid {
+    --columns: #{$cols-m};
+    display: grid;
+    grid-template-columns: repeat(var(--columns), 1fr);
+    grid-column: 1 / span var(--columns);
+    align-items: start;
+
+    @include bp (sm) {
+        --columns: #{$cols-d};
+    }
+}

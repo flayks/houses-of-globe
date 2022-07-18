@@ -1,0 +1,163 @@
+.switcher {
+    --offset: 16px;
+    --button-size: 44px;
+    $shadow-color: rgba(0, 0, 0, 0.05);
+    position: fixed;
+    z-index: 101;
+    bottom: var(--offset);
+    left: var(--offset);
+    pointer-events: none;
+
+    @include bp (sm) {
+        --offset: clamp(20px, 3vw, 40px);
+    }
+    @include bp (md) {
+        --button-size: 56px;
+    }
+
+    // Links
+    &__links {
+        position: absolute;
+        z-index: 2;
+        bottom: calc(var(--button-size) + 16px);
+        left: 0;
+        max-width: 280px;
+        white-space: nowrap;
+        opacity: 0;
+        padding: 8px;
+        background: $color-primary-tertiary20;
+        border-radius: 12px;
+        transform: translate3d(0, 8px, 0);
+        box-shadow: 0 6px 6px $shadow-color, 0 12px 12px $shadow-color, 0 24px 24px $shadow-color;
+        transition: opacity 0.8s var(--ease-quart), transform 0.6s var(--ease-quart);
+
+        li {
+            display: block;
+            margin: 1px 0;
+            line-height: 1.5;
+        }
+        a {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px 8px 10px;
+            color: #fff;
+            font-weight: 900;
+            font-size: rem(16px);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.25s ease-out;
+
+            &:hover {
+                background: rgba($color-tertiary, 0.2);
+            }
+        }
+        :global(.icon) {
+            display: block;
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            margin-right: 16px;
+            color: $color-secondary-light;
+        }
+
+        // Active link
+        .is-active {
+            a {
+                background: rgba($color-secondary, 0.25);
+            }
+        }
+    }
+
+    // Button
+    &__button {
+        $shadow-color: rgba(0, 0, 0, 0.05);
+        width: var(--button-size);
+        height: var(--button-size);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        pointer-events: auto;
+        background: $color-primary-tertiary20;
+        border-radius: 100%;
+        box-shadow: 0 6px 6px $shadow-color, 0 12px 12px $shadow-color, 0 24px 24px $shadow-color;
+        transition: background-color 0.6s var(--ease-quart);
+
+        // Dots container
+        span {
+            display: inline-flex;
+            flex-flow: column;
+        }
+        // Dot
+        i {
+            display: block;
+            width: 4px;
+            height: 4px;
+            margin: 1.5px 0;
+            border-radius: 100%;
+            background: #fff;
+            transition: transform 0.6s var(--ease-quart);
+
+            @include bp (md) {
+                width: 6px;
+                height: 6px;
+                margin: 2px 0;
+            }
+        }
+
+        // Hover
+        &:hover {
+            background-color: #7e5288;
+
+            i {
+                &:nth-child(1) { transform: translate3d(0, -2px, 0); }
+                &:nth-child(3) { transform: translate3d(0, 2px, 0); }
+            }
+        }
+    }
+
+
+    /*
+    ** States
+    */
+    // Open
+    &.is-open {
+        .switcher {
+            &__links {
+                opacity: 1;
+                pointer-events: auto;
+                transform: translate3d(0, 0, 0);
+
+                a {
+                    pointer-events: auto;
+                }
+            }
+
+            &__button {
+                i {
+                    &:nth-child(1) {
+                        transform: translate3d(-5px, 5px, 0);
+
+                        @include bp (md) {
+                            transform: translate3d(-7px, 8px, 0);
+                        }
+                    }
+                    &:nth-child(2) {
+                        transform: translate3d(5px, -2px, 0);
+
+                        @include bp (md) {
+                            transform: translate3d(7px, -2px, 0);
+                        }
+                    }
+                    &:nth-child(3) {
+                        transform: translate3d(0px, -2px, 0);
+
+                        @include bp (md) {
+                            transform: translate3d(0px, -3px, 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

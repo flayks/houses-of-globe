@@ -1,0 +1,59 @@
+// Pagination
+.pagination {
+    position: relative;
+    display: block;
+    margin: auto 0;
+    cursor: pointer;
+
+    &[disabled] {
+        cursor: not-allowed;
+    }
+
+    // Progress
+    &__progress {
+        position: relative;
+        display: inline-block;
+        font-size: rem(88px);
+        color: rgba($color-text, 0.2);
+        font-family: $font-serif;
+        font-weight: 200;
+        line-height: 1;
+        letter-spacing: -0.05em;
+        transition: color 0.5s;
+
+        @include bp (sm) {
+            font-size: clamp(80px, 16vw, #{rem(160px)});
+        }
+
+        span {
+            display: inline-block;
+            margin: 0 -10px;
+        }
+    }
+
+    // Hover
+    &:not([disabled]):hover {
+        .pagination__progress {
+            color: rgba($color-text, 0.4);
+        }
+    }
+
+    // Label
+    :global(p) {
+        display: block;
+        margin: 16px auto 0;
+        text-align: center;
+        font-family: $font-sans;
+        text-transform: uppercase;
+        color: $color-text;
+        letter-spacing: 0.1em;
+        font-weight: 400;
+        font-size: rem(14px);
+    }
+
+    // More button
+    :global(.more) {
+        color: $color-secondary;
+        font-weight: 500;
+    }
+}

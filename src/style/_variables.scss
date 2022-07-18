@@ -1,0 +1,58 @@
+// Colors
+$color-primary: #3C0576;
+$color-primary-dark: #36046A;
+$color-primary-darker: #2D0458;
+$color-primary-tertiary20: #633185;
+$color-secondary: #FF6C89;
+$color-secondary-light: #FFB3C2;
+$color-secondary-bright: #FF0536;
+$color-text: #333;
+$color-tertiary: #FFE0C5;
+$color-lightpurple: #8B50B2;
+$color-lilas-bright: #C78FEC;
+$color-gray: #666;
+$color-lightgray: #999;
+$color-shadow-brown: #7A5D44;
+$color-cream: #FEF6EF;
+
+
+/* Fonts
+========================================================================== */
+$base-font-size: 28px !default;
+
+// Families
+$replacement-sans: "Helvetica, Arial, sans-serif";
+$replacement-serif: "Georgia, serif";
+$font-sans: "Garnett", #{$replacement-sans};
+$font-serif: "Jazmin", #{$replacement-serif};
+
+
+/* Sizes, margins and spacing
+====================================================================== */
+$base-width: 1600 !default;
+$container-width: 1800px !default;
+
+// Grid
+$cols-m: 8 !default;
+$cols-d: 24 !default;
+
+
+/* Directories
+========================================================================== */
+$dir-img: "/images" !default;
+$dir-fonts: "/fonts" !default;
+
+
+/* Responsive breakpoints
+========================================================================== */
+$breakpoints: (
+    mob: 450px,
+    mob-lg: 550px,
+    xs: 767px,
+    sm: 768px,
+    md: 992px,
+    sd: 1200px,
+    lg: 1440px,
+    xl: 1600px,
+    fhd: 1920px,
+) !default;

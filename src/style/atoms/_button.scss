@@ -1,0 +1,152 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 16px;
+    background: #fff;
+    font: 900 #{rem(16px)}/1 $font-sans;
+    color: $color-text;
+    cursor: pointer;
+    border-radius: 100vh;
+    border: none;
+    text-decoration: none;
+    transition: background-color 0.55s var(--ease-quart), color 0.55s var(--ease-quart);
+
+    @include bp (md) {
+        height: 48px;
+        padding: 1px 24px 0;
+        font-size: rem(18px);
+    }
+
+    // Icon
+    :global(img), :global(svg) {
+        display: block;
+        color: $color-gray;
+        transition: color 0.3s;
+    }
+
+    // Hover effect
+    &:not([disabled]):hover {
+        background: $color-secondary;
+
+        :global(svg) {
+            color: #fff;
+        }
+    }
+    :global(.text-split__line) {
+        &:last-child {
+            --offset-y: 65%;
+            color: #fff;
+        }
+    }
+
+
+    /*
+    ** Size variants
+    */
+    // XSmall
+    &--xsmall {
+        height: 32px;
+        padding: 0 6px;
+
+        @include bp (md) {
+            height: 32px;
+            padding: 0 16px;
+            font-size: rem(14px);
+        }
+    }
+
+    // Small
+    &--small {
+        height: 40px;
+        padding: 0 16px;
+
+        @include bp (md) {
+            height: 40px;
+            padding: 0 16px;
+        }
+    }
+
+    // Large
+    &--large {
+        height: 56px;
+        font-size: rem(16px);
+
+        @include bp (md) {
+            height: 72px;
+            height: 72px;
+            padding: 0 40px;
+            font-size: rem(18px);
+        }
+    }
+
+
+    /*
+    ** Color Variants
+    */
+    // Pink Light
+    &--pinklight {
+        color: $color-text;
+        background: $color-secondary-light;
+
+        // Hover
+        &:not([disabled]):hover {
+            color: #fff;
+            background: $color-secondary;
+        }
+        :global(.text-split__line) {
+            &:last-child {
+                color: #fff;
+            }
+        }
+    }
+
+    // Pink
+    &--pink {
+        color: #fff;
+        background: $color-secondary;
+
+        // Hover
+        &:not([disabled]):hover {
+            color: $color-text;
+            background-color: darken($color-secondary, 7);
+        }
+    }
+
+    // Beige
+    &--beige {
+        $color-button: #F2D3B8;
+        color: $color-text;
+        background: $color-button;
+
+        &[disabled] {
+            background: none;
+            border: 2px solid darken($color-button, 2);
+        }
+
+        // Hover
+        :global(.text-split__line) {
+            &:last-child {
+                color: $color-primary-tertiary20;
+            }
+        }
+        &:not([disabled]):hover {
+            background: darken($color-button, 2.5);
+        }
+    }
+
+
+    /*
+    ** Icons variants
+    */
+    &.has-icon-before {
+        :global(img), :global(svg) {
+            margin-right: 12px;
+        }
+    }
+    &.has-icon-after {
+        :global(img), :global(svg) {
+            margin-left: 12px;
+        }
+    }
+}

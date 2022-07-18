@@ -1,0 +1,124 @@
+// Email Form
+.newsletter-form {
+    position: relative;
+
+    &__email {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        height: 56px;
+        margin-bottom: 20px;
+        padding: 0 24px;
+        border-radius: 100vh;
+        box-shadow: inset 0 0 0 2px $color-secondary;
+        transition: box-shadow 0.6s var(--ease-quart);
+
+        @include bp (sm) {
+            height: 64px;
+            padding: 0 30px;
+        }
+
+        :global(input) {
+            display: block;
+            width: 100%;
+            height: 100%;
+            font-size: rem(16px);
+            font-family: $font-sans;
+            font-weight: 300;
+            color: $color-tertiary;
+            background: none;
+            border: none;
+
+            @include bp (sm) {
+                font-size: rem(18px);
+            }
+        }
+        :global(input::placeholder) {
+            color: rgba($color-tertiary, 0.6);
+            opacity: 1;
+        }
+        :global(button) {
+            position: absolute !important;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 32px;
+            flex-shrink: 0;
+        }
+
+        // States
+        &.is-focused, &:hover {
+            box-shadow: inset 0 0 0 4px $color-secondary;
+        }
+    }
+
+    // Bottom details
+    &__bottom {
+        display: block;
+        text-align: center;
+        font-size: rem(14px);
+        max-width: 600px;
+
+        @include bp (sm) {
+            display: flex;
+            justify-content: center;
+            font-size: rem(16px);
+        }
+
+        .past-issues {
+            display: inline-flex;
+            align-items: center;
+            margin: 0 auto auto 0;
+            text-decoration: none;
+            color: $color-text;
+
+            &, span {
+                transition: color 0.2s, border-color 0.2s;
+            }
+            span {
+                display: block;
+                padding-bottom: 2px;
+                font-size: rem(14px);
+                color: $color-text;
+                margin-left: 8px;
+                border-bottom: 1px solid $color-text;
+
+                @include bp (sm) {
+                    margin-left: 12px;
+                    padding-bottom: 0;
+                    font-size: rem(16px);
+                }
+            }
+        }
+        p {
+            color: $color-gray;
+            line-height: 1.3;
+            margin-top: 16px;
+            margin-bottom: 0;
+
+            @include bp (sm) {
+                margin-top: 0;
+            }
+        }
+    }
+
+    // Message
+    &__message {
+        padding: 24px;
+        text-align: center;
+        border-radius: 8px;
+
+        &.is-error {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            color: #fff;
+            background: $color-secondary;
+        }
+        &.is-success {
+            color: $color-text;
+            background: $color-tertiary;
+        }
+    }
+}

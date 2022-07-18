@@ -1,0 +1,21 @@
+.badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 16px;
+    margin: 0 auto;
+    padding: 0 6px;
+    text-align: center;
+    background: $color-secondary-light;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1;
+    color: $color-primary-darker;
+    border-radius: 100vh;
+
+    // Small size
+    &--small {
+        font-size: rem(7px);
+    }
+}

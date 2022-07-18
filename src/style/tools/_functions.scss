@@ -1,0 +1,43 @@
+@use "sass:math";
+
+/* PX to REM
+========================================================================== */
+@function rem($target, $context: $base-font-size) {
+    @if $target == 0 { @return 0 }
+    $size: math.div($target, $context);
+    @return math.div(round($size * 1000), 1000) + rem;
+}
+
+
+/* PX to VW
+========================================================================== */
+@function pxVW($value, $base: $base-width) {
+    @if $value == 0 { @return 0 }
+    @return math.div($value, $base) * 100 + vw;
+}
+
+
+/* VW to PX
+========================================================================== */
+@function vwPX($value, $base: $base-width) {
+    @if $value == 0 { @return 0; }
+    @return math.div(($value * $base), 100) + px;
+}
+
+
+/* Headings
+========================================================================== */
+@function headings($from: 1, $to: 6) {
+    @if $from == $to {
+        @return "h#{$from}";
+    } @else {
+        @return "h#{$from}," + headings($from + 1, $to);
+    }
+}
+
+
+/* HEX color to RGB
+========================================================================== */
+@function hexToRGB($color) {
+    @return red($color), green($color), blue($color);
+}

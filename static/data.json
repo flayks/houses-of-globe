@@ -1,0 +1,305 @@
+{
+    "locations": [
+        {
+            "id": "13",
+            "name": "Amsterdam",
+            "slug": "amsterdam",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    4.899860680654342,
+                    52.37314374411062
+                ]
+            },
+            "country": {
+                "name": "Netherlands",
+                "slug": "netherlands",
+                "flag": {
+                    "id": "a04ec14e-ab1a-4f29-89f7-bbc80e7652c6"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-07-14T12:45:23.000Z",
+            "has_poster": false
+        },
+        {
+            "id": "8",
+            "name": "Bordeaux",
+            "slug": "bordeaux",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    -0.5754713605547863,
+                    44.84009826162264
+                ]
+            },
+            "country": {
+                "name": "France",
+                "slug": "france",
+                "flag": {
+                    "id": "302574d5-25e7-46e0-8b8e-d766f8fd9ba0"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-06-28T13:24:09.000Z",
+            "has_poster": false
+        },
+        {
+            "id": "7",
+            "name": "Toulouse",
+            "slug": "toulouse",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    1.435965494210535,
+                    43.59215838310115
+                ]
+            },
+            "country": {
+                "name": "France",
+                "slug": "france",
+                "flag": {
+                    "id": "302574d5-25e7-46e0-8b8e-d766f8fd9ba0"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-06-29T21:27:28.000Z",
+            "has_poster": false
+        },
+        {
+            "id": "10",
+            "name": "Tbilisi",
+            "slug": "tbilisi",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    44.841338359941716,
+                    41.67532225351815
+                ]
+            },
+            "country": {
+                "name": "Georgia",
+                "slug": "georgia",
+                "flag": {
+                    "id": "dbe0cfad-9101-4cae-844b-155e46c58cc3"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-02-16T21:21:08.000Z",
+            "has_poster": false
+        },
+        {
+            "id": "1",
+            "name": "Montpellier",
+            "slug": "montpellier",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    3.8812708363174124,
+                    43.61840453071787
+                ]
+            },
+            "country": {
+                "name": "France",
+                "slug": "france",
+                "flag": {
+                    "id": "302574d5-25e7-46e0-8b8e-d766f8fd9ba0"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-06-22T21:06:38.000Z",
+            "has_poster": true
+        },
+        {
+            "id": "2",
+            "name": "Nîmes",
+            "slug": "nimes",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    4.383310568067515,
+                    44.065428385116576
+                ]
+            },
+            "country": {
+                "name": "France",
+                "slug": "france",
+                "flag": {
+                    "id": "302574d5-25e7-46e0-8b8e-d766f8fd9ba0"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-06-22T21:06:51.000Z",
+            "has_poster": false
+        },
+        {
+            "id": "3",
+            "name": "Sète",
+            "slug": "sete",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    3.7264707827327186,
+                    43.44082834937862
+                ]
+            },
+            "country": {
+                "name": "France",
+                "slug": "france",
+                "flag": {
+                    "id": "302574d5-25e7-46e0-8b8e-d766f8fd9ba0"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-06-22T21:07:05.000Z",
+            "has_poster": false
+        },
+        {
+            "id": "4",
+            "name": "Occitanie",
+            "slug": "occitanie",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    2.343304132901949,
+                    44.25400835313695
+                ]
+            },
+            "country": {
+                "name": "France",
+                "slug": "france",
+                "flag": {
+                    "id": "302574d5-25e7-46e0-8b8e-d766f8fd9ba0"
+                },
+                "continent": {
+                    "slug": "europe"
+                }
+            },
+            "date_updated": "2022-06-22T21:49:51.000Z",
+            "has_poster": true
+        },
+        {
+            "id": "5",
+            "name": "Brisbane",
+            "slug": "brisbane",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    153.02085696461688,
+                    -27.47573778895464
+                ]
+            },
+            "country": {
+                "name": "Australia",
+                "slug": "australia",
+                "flag": {
+                    "id": "5a5bc9a1-9401-4e2f-88f2-ffd6c05acefb"
+                },
+                "continent": {
+                    "slug": "oceania"
+                }
+            },
+            "date_updated": "2022-06-22T21:12:39.000Z",
+            "has_poster": true
+        },
+        {
+            "id": "6",
+            "name": "Melbourne",
+            "slug": "melbourne",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    144.95966554972455,
+                    -37.82816525377864
+                ]
+            },
+            "country": {
+                "name": "Australia",
+                "slug": "australia",
+                "flag": {
+                    "id": "5a5bc9a1-9401-4e2f-88f2-ffd6c05acefb"
+                },
+                "continent": {
+                    "slug": "oceania"
+                }
+            },
+            "date_updated": "2022-06-22T21:07:46.000Z",
+            "has_poster": true
+        }
+    ],
+
+    "continents": [
+        {
+            "name": "Europe",
+            "slug": "europe",
+            "rotation": 90,
+            "countries": [
+                {
+                    "id": "1",
+                    "slug": "france"
+                },
+                {
+                    "id": "3",
+                    "slug": "georgia"
+                },
+                {
+                    "id": "4",
+                    "slug": "portugal"
+                },
+                {
+                    "id": "5",
+                    "slug": "netherlands"
+                }
+            ]
+        },
+        {
+            "name": "Oceania",
+            "slug": "oceania",
+            "rotation": 220,
+            "countries": [
+                {
+                    "id": "2",
+                    "slug": "australia"
+                }
+            ]
+        },
+        {
+            "name": "Asia",
+            "slug": "asia",
+            "rotation": 120,
+            "countries": []
+        },
+        {
+            "name": "Africa",
+            "slug": "africa",
+            "rotation": 80,
+            "countries": []
+        },
+        {
+            "name": "North America",
+            "slug": "north-america",
+            "rotation": 0,
+            "countries": []
+        },
+        {
+            "name": "South America",
+            "slug": "south-america",
+            "rotation": 0,
+            "countries": []
+        }
+    ]
+}

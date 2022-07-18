@@ -1,0 +1,29 @@
+.photo {
+    overflow: hidden;
+    background: $color-primary-tertiary20;
+    border-radius: 6px;
+
+    @include bp (md) {
+        border-radius: 8px;
+    }
+
+    a {
+        position: relative;
+        display: block;
+        height: 100%;
+        cursor: zoom-in;
+
+        & > picture {
+            height: 100%;
+
+            img {
+                display: block;
+                width: calc(100% + 2px);
+                height: calc(100% + 2px);
+                object-fit: cover;
+                pointer-events: none;
+                user-select: none;
+            }
+        }
+    }
+}

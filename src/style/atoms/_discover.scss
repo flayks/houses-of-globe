@@ -1,0 +1,20 @@
+.discover {
+    padding: 0 20px;
+    font-family: $font-sans;
+    font-size: rem(24px);
+    font-weight: 200;
+    line-height: 1.5;
+    color: $color-tertiary;
+
+    @include bp (sm) {
+        font-size: rem(28px);
+    }
+    @include bp (md) {
+        font-size: rem(32px);
+    }
+
+    strong {
+        color: $color-secondary;
+        font-weight: 200;
+    }
+}

@@ -1,0 +1,16 @@
+.arrow {
+    display: block;
+
+    // Colors
+    &--white {
+        color: #fff;
+    }
+    &--pink {
+        color: $color-secondary;
+    }
+
+    // Variants
+    &--flip {
+        transform: rotate(180deg);
+    }
+}
