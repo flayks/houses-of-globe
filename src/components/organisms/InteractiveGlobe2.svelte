@@ -4,17 +4,14 @@
 
 <script lang="ts">
     import { getContext, onMount } from 'svelte'
-    import { fade, fly } from 'svelte/transition'
+    import { fly } from 'svelte/transition'
     import { quartOut } from 'svelte/easing'
     import { Globe, type Marker } from '$modules/globe2'
     import { getRandomItem } from '$utils/functions'
     // Components
     import Image from '$components/atoms/Image.svelte'
 
-    export let type: string = undefined
-
     let innerWidth: number
-    let offsetWidth: number, offsetHeight: number
     let globeParentEl: HTMLElement, globeEl: HTMLElement
     let globe: any
     let observer: IntersectionObserver
@@ -39,21 +36,17 @@
         globe = new Globe({
             el: globeEl,
             parent: globeParentEl,
-            width: offsetWidth,
-            height: offsetHeight,
             mapFile: `/images/globe-map-${globeResolution}.png`,
             dpr: Math.min(Math.round(window.devicePixelRatio), 2),
             autoRotate: true,
-            speed: 0.0035,
+            speed: 0.003,
             rotationStart: randomContinent.rotation,
             markers,
             pane: import.meta.env.DEV,
         })
 
-        // Define cluster locations
+        // TODO: Define cluster locations and position it
         clusterLocations = locations.filter((loc: any) => loc.country.slug === 'france')
-
-        // console.log(globe)
 
         resize()
 
@@ -98,10 +91,7 @@
 
     // Resize
     const resize = () => {
-        globe.resize({
-            width: offsetWidth,
-            height: offsetHeight,
-        })
+        globe.resize()
     }
 
     // Destroy
@@ -117,10 +107,7 @@
 
 <div class="globe" bind:this={globeParentEl}>
     <div class="globe__inner">
-        <div class="globe__canvas"
-            bind:this={globeEl}
-            bind:offsetWidth bind:offsetHeight
-        />
+        <div class="globe__canvas" bind:this={globeEl} />
     </div>
 
     <ul class="globe__markers">

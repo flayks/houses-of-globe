@@ -11,6 +11,8 @@ export class Globe {
         this.options = options
         this.el = options.el
         this.parent = options.parent
+        this.width = this.el.offsetWidth
+        this.height = this.el.offsetHeight
         this.markers = options.markers || []
 
         // Parameters
@@ -28,10 +30,7 @@ export class Globe {
         // Run globe after check for WebGL support
         if (this.webgl) {
             this.build()
-            this.resize({
-                width: this.options.width,
-                height: this.options.height,
-            })
+            this.resize()
             this.render()
         }
 
@@ -59,6 +58,7 @@ export class Globe {
 
         // Create camera
         this.camera = new Camera(this.gl)
+        // TODO: Why 1.315? Is there a way to calculate this number?
         this.camera.position.set(0, 0, 1.315)
 
         // Create controls
@@ -84,8 +84,9 @@ export class Globe {
         })
 
         // Create light
+        // TODO: How to create a nicer light that doesn't fade to 0? Just creating a "dark" area where you still can read markers and see countries/continents
         // this.light = new Vec3(0, 50, 150)
-        this.light = new Vec3(0, 0, 1000)
+        this.light = new Vec3(0, 0, 15)
 
         // Add map texture
         const map = new Texture(this.gl)
@@ -113,7 +114,7 @@ export class Globe {
         })
         this.mesh.setParent(this.scene)
 
-        // Define random continent position
+        // Start globe angle with a random continent's position
         if (this.options.rotationStart) {
             this.mesh.rotation.y = degToRad(this.options.rotationStart * -1) || 0
         }
@@ -177,6 +178,11 @@ export class Globe {
             // Scale marker position to fit globe size
             marker.position = [position[0] *= 0.5, position[1] *= 0.5, position[2] *= 0.5]
 
+            // Position marker
+            const posX = (marker.position[0] + 1) * (this.width / 1.315)
+            const posY = (1 - marker.position[1]) * (this.height / 1.315)
+            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+
             console.log(marker)
             return marker
         })
@@ -185,13 +191,14 @@ export class Globe {
     // Update markers
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
-            const markerEl = this.getMarker(marker.slug)
-            const screenVector = new Vec3(0,0,0)
-            screenVector.copy(marker.position)
-            this.camera.project(screenVector)
+            // const markerEl = this.getMarker(marker.slug)
+            // const screenVector = new Vec3(0,0,0)
+            // screenVector.copy(marker.position)
+            // this.camera.project(screenVector)
+
 
             // let posX = (screenVector.x + 1) * (this.options.width / 1.315)
-            // // posX /= this.mesh.rotation.y
+            // // // posX /= this.mesh.rotation.y
             // let posY = (1 - screenVector.y) * (this.options.height / 1.315)
             // markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
         })
@@ -201,9 +208,9 @@ export class Globe {
     /**
      * Resize method
      */
-    resize (options: any) {
+    resize () {
         // this.renderer.setSize(window.innerWidth, window.innerHeight)
-        this.renderer.setSize(options.width || this.options.width, options.height || this.options.height)
+        this.renderer.setSize(this.width, this.height)
         this.camera.perspective({
             aspect: this.gl.canvas.width / this.gl.canvas.height
         })
@@ -229,7 +236,7 @@ export class Globe {
             camera: this.camera,
         })
 
-        // Update light
+        // TODO: Update light
         // this.light.set(this.camera.position)
         // this.program.uniforms.u_lightWorldPosition.value = [this.mesh.rotation.y * 1, 50, 150]
 
@@ -264,8 +271,6 @@ export class Globe {
 type Options = {
     el: HTMLElement
     parent: HTMLElement
-    width: number
-    height: number
     mapFile: string
     dpr: number
     autoRotate: boolean
