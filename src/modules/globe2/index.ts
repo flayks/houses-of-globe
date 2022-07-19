@@ -210,6 +210,8 @@ export class Globe {
      */
     resize () {
         // this.renderer.setSize(window.innerWidth, window.innerHeight)
+        this.width = this.el.offsetWidth
+        this.height = this.el.offsetHeight
         this.renderer.setSize(this.width, this.height)
         this.camera.perspective({
             aspect: this.gl.canvas.width / this.gl.canvas.height

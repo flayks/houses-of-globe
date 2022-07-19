@@ -7,7 +7,7 @@
     import { fly } from 'svelte/transition'
     import { quartOut } from 'svelte/easing'
     import { Globe, type Marker } from '$modules/globe2'
-    import { getRandomItem } from '$utils/functions'
+    import { getRandomItem, debounce } from '$utils/functions'
     // Components
     import Image from '$components/atoms/Image.svelte'
 
@@ -90,9 +90,9 @@
     }
 
     // Resize
-    const resize = () => {
+    const resize = debounce(() => {
         globe.resize()
-    }
+    }, 100)
 
     // Destroy
     const destroy = () => {
