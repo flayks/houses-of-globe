@@ -123,7 +123,7 @@
         {/each}
 
         <li class="globe__cluster">
-            <button on:click={() => popinOpen = !popinOpen} />
+            <button on:click={() => popinOpen = !popinOpen} aria-label="{popinOpen ? 'Close' : 'Open'} cluster" />
         </li>
     </ul>
 
