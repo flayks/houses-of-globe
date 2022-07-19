@@ -303,7 +303,7 @@ export type Marker = {
 /**
  * Detect WebGL support
  */
-function WebGLSupport () {
+const WebGLSupport = () => {
     try {
         var canvas = document.createElement('canvas')
         return !!window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
@@ -315,7 +315,7 @@ function WebGLSupport () {
 /**
  * Convert lat/lng to Vec3
  */
-function lonlatVec3 (longitude: number, latitude: number) {
+const lonlatVec3 = (longitude: number, latitude: number) => {
     const lat = latitude * Math.PI / 180
     const lng = -longitude * Math.PI / 180
     return new Vec3(

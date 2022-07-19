@@ -4,7 +4,7 @@
 
 <script lang="ts">
     import { getContext, onMount } from 'svelte'
-    import { fly } from 'svelte/transition'
+    import { fade, fly } from 'svelte/transition'
     import { quartOut } from 'svelte/easing'
     import { Globe, type Marker } from '$modules/globe2'
     import { getRandomItem, debounce } from '$utils/functions'
