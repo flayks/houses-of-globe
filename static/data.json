@@ -277,29 +277,5 @@
                 }
             ]
         },
-        {
-            "name": "Asia",
-            "slug": "asia",
-            "rotation": 120,
-            "countries": []
-        },
-        {
-            "name": "Africa",
-            "slug": "africa",
-            "rotation": 80,
-            "countries": []
-        },
-        {
-            "name": "North America",
-            "slug": "north-america",
-            "rotation": 0,
-            "countries": []
-        },
-        {
-            "name": "South America",
-            "slug": "south-america",
-            "rotation": 0,
-            "countries": []
-        }
     ]
 }

@@ -74,15 +74,11 @@
     export async function load ({ fetch }: LoadEvent): Promise<LoadOutput> {
         const res = await fetch('/data.json')
         const data = await res.json()
-        const filteredContinents = data.continents.filter((cont: any) => cont.countries.length)
 
         if (res) {
             return {
                 props: {
-                    data: {
-                        ...data,
-                        continents: filteredContinents
-                    }
+                    data,
                 },
             }
         }

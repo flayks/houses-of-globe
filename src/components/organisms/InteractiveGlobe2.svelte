@@ -25,15 +25,11 @@
     $: globeResolution = innerWidth > 1440 && window.devicePixelRatio > 1 ? '4k' : '2k'
 
     const { continents, locations } = getContext('global')
-    const randomContinent: any = getRandomItem(continents.filter((cont: any) => cont.countries))
+    const randomContinent: any = getRandomItem(continents)
     const markers = locations.map(({ name, slug, country, coordinates: { coordinates }}): Marker => ({
         name,
         slug,
-        country: {
-            name: country.name,
-            slug: country.slug,
-            flag: country.flag,
-        },
+        country: { ...country },
         lat: coordinates[1],
         lng: coordinates[0],
     }))
