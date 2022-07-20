@@ -15,9 +15,10 @@
     setContext('global', data)
 
     const tempNavLinks = [
-        { url: '/', text: 'Homepage', globe: 'Full Globe' },
+        { url: '/', text: 'Homepage', globe: 'Full Globe v2' },
+        { url: '/v1', text: 'Homepage', globe: 'Globe v1' },
         { url: '/photos', text: 'Photos', globe: 'No Globe' },
-        { url: '/subscribe', text: 'Subscribe', globe: 'Cropped Globe' },
+        { url: '/subscribe', text: 'Subscribe', globe: 'Cropped Globe v2' },
     ]
 
     /**
