@@ -19,6 +19,8 @@ export class Globe {
         this.params = {
             autoRotate: options.autoRotate,
             speed: options.speed,
+            enableMarkers: options.enableMarkers,
+            zoom: 1.305,
         }
 
         // Misc
@@ -59,7 +61,7 @@ export class Globe {
         // Create camera
         this.camera = new Camera(this.gl)
         // TODO: Why 1.315? Is there a way to calculate this number?
-        this.camera.position.set(0, 0, 1.315)
+        this.camera.position.set(0, 0, this.params.zoom)
 
         // Create controls
         this.controls = new Orbit(this.camera, {
@@ -163,6 +165,17 @@ export class Globe {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
 
+            // Define position
+            const position = lonlatVec3(marker.lng, marker.lat)
+
+            // Scale marker position to fit globe size
+            marker.position = [position[0] *= 0.5, position[1] *= 0.5, position[2] *= 0.5]
+
+            // Position marker
+            const posX = (marker.position[0] + 1) * (this.width / this.params.zoom)
+            const posY = (1 - marker.position[1]) * (this.height / this.params.zoom)
+            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+
             // Entering marker
             markerEl.addEventListener('mouseenter', () => {
                 this.hoveringMarker = true
@@ -171,17 +184,6 @@ export class Globe {
             markerEl.addEventListener('mouseleave', () => {
                 this.hoveringMarker = false
             }, false)
-
-            // Define position
-            const position = lonlatVec3(marker.lng, marker.lat)
-
-            // Scale marker position to fit globe size
-            marker.position = [position[0] *= 0.5, position[1] *= 0.5, position[2] *= 0.5]
-
-            // Position marker
-            const posX = (marker.position[0] + 1) * (this.width / 1.315)
-            const posY = (1 - marker.position[1]) * (this.height / 1.315)
-            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
 
             console.log(marker)
             return marker
@@ -197,9 +199,9 @@ export class Globe {
             // this.camera.project(screenVector)
 
 
-            // let posX = (screenVector.x + 1) * (this.options.width / 1.315)
+            // let posX = (screenVector.x + 1) * (this.options.width / this.params.zoom)
             // // // posX /= this.mesh.rotation.y
-            // let posY = (1 - screenVector.y) * (this.options.height / 1.315)
+            // let posY = (1 - screenVector.y) * (this.options.height / this.params.zoom)
             // markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
         })
     }
@@ -278,6 +280,7 @@ type Options = {
     autoRotate: boolean
     speed: number
     rotationStart?: number
+    enableMarkers?: boolean
     markers?: any[]
     pane?: boolean
 }
@@ -303,7 +306,7 @@ export type Marker = {
 /**
  * Detect WebGL support
  */
-const WebGLSupport = () => {
+function WebGLSupport () {
     try {
         var canvas = document.createElement('canvas')
         return !!window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
@@ -315,7 +318,7 @@ const WebGLSupport = () => {
 /**
  * Convert lat/lng to Vec3
  */
-const lonlatVec3 = (longitude: number, latitude: number) => {
+function lonlatVec3 (longitude: number, latitude: number) {
     const lat = latitude * Math.PI / 180
     const lng = -longitude * Math.PI / 180
     return new Vec3(

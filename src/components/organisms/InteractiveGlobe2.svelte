@@ -4,12 +4,15 @@
 
 <script lang="ts">
     import { getContext, onMount } from 'svelte'
-    import { fade, fly } from 'svelte/transition'
+    import { fly } from 'svelte/transition'
     import { quartOut } from 'svelte/easing'
     import { Globe, type Marker } from '$modules/globe2'
     import { getRandomItem, debounce } from '$utils/functions'
     // Components
     import Image from '$components/atoms/Image.svelte'
+
+    export let type: string = undefined
+    export let enableMarkers: boolean = true
 
     let innerWidth: number
     let globeParentEl: HTMLElement, globeEl: HTMLElement
@@ -41,6 +44,7 @@
             autoRotate: true,
             speed: 0.003,
             rotationStart: randomContinent.rotation,
+            enableMarkers,
             markers,
             pane: import.meta.env.DEV,
         })
@@ -71,6 +75,7 @@
         // Destroy
         return () => {
             destroy()
+            observer && observer.disconnect()
         }
     })
 
@@ -105,7 +110,9 @@
     on:resize={resize}
 />
 
-<div class="globe" bind:this={globeParentEl}>
+<div class="globe" bind:this={globeParentEl}
+    class:is-cropped={type === 'cropped'}
+>
     <div class="globe__inner">
         <div class="globe__canvas" bind:this={globeEl} />
     </div>
@@ -130,8 +137,8 @@
     {#if popinOpen}
         <div class="globe__popin" transition:fly={{ y: 16, duration: 500, easing: quartOut }}>
             <ul>
-                {#each clusterLocations as { name, slug, country }, index (slug)}
-                    <li in:fade={{ duration: 400, delay: 200 + (50 * index) }}>
+                {#each clusterLocations as { name, slug, country }, index}
+                    <li>
                         <a href="/{country.slug}/{slug}" sveltekit:noscroll tabindex="0">
                             <!-- <Image
                                 class="flag"

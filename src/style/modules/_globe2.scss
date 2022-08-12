@@ -241,15 +241,21 @@
     /*
     ** States and Variants
     */
+    // Cropped version
+    &.is-cropped {
+        overflow: hidden;
+        height: clamp(300px, 30vw, 500px);
+    }
+
     // When dragging
     :global(.is-grabbing) {
         cursor: grabbing;
     }
 
-
     // Tweakpane
     :global(.tp-rotv) {
         position: absolute;
+        z-index: 10;
         top: 0;
         right: 0;
         width: 300px;
