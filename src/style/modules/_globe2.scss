@@ -1,14 +1,14 @@
 // Globe
 .globe {
+    --width: clamp(700px, 100vw, 1315px);
     position: relative;
     z-index: 10;
     user-select: none;
 
-
     // Inner
     &__inner {
         position: relative;
-        width: clamp(700px, 100vw, 1315px);
+        width: var(--width);
         margin-left: auto;
         margin-right: auto;
 
@@ -99,14 +99,14 @@
         ** States
         */
         // Has name
-        &.is-dot-only {
+        &:global(.is-dot-only) {
             dt, dd {
                 opacity: 0;
             }
         }
 
         // Has country
-        &.has-country {
+        &:global(.has-country) {
             dd {
                 opacity: 1;
             }

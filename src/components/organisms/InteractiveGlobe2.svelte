@@ -13,6 +13,9 @@
 
     export let type: string = undefined
     export let enableMarkers: boolean = true
+    export let speed: number = 0.003
+    export let pane: boolean = import.meta.env.DEV
+    export let width: number = undefined
 
     let innerWidth: number
     let globeParentEl: HTMLElement, globeEl: HTMLElement
@@ -42,11 +45,11 @@
             mapFile: `/images/globe-map-${globeResolution}.png`,
             dpr: Math.min(Math.round(window.devicePixelRatio), 2),
             autoRotate: true,
-            speed: 0.003,
+            speed,
             rotationStart: randomContinent.rotation,
             enableMarkers,
             markers,
-            pane: import.meta.env.DEV,
+            pane,
         })
 
         // TODO: Define cluster locations and position it
@@ -112,54 +115,57 @@
 
 <div class="globe" bind:this={globeParentEl}
     class:is-cropped={type === 'cropped'}
+    style:--width={width ? `${width}px` : null}
 >
     <div class="globe__inner">
         <div class="globe__canvas" bind:this={globeEl} />
     </div>
 
-    <ul class="globe__markers">
-        {#each markers as { name, slug, country, lat, lng }}
-            <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
-                <a href="/{country.slug}/{slug}" sveltekit:noscroll>
-                    <dl>
-                        <dt class="title-small">{name}</dt>
-                        <dd class="text-label text-label--small">{country.name}</dd>
-                    </dl>
-                </a>
+    {#if enableMarkers}
+        <ul class="globe__markers">
+            {#each markers as { name, slug, country, lat, lng }}
+                <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
+                    <a href="/{country.slug}/{slug}" sveltekit:noscroll>
+                        <dl>
+                            <dt class="title-small">{name}</dt>
+                            <dd class="text-label text-label--small">{country.name}</dd>
+                        </dl>
+                    </a>
+                </li>
+            {/each}
+
+            <li class="globe__cluster">
+                <button on:click={() => popinOpen = !popinOpen} aria-label="{popinOpen ? 'Close' : 'Open'} cluster" />
             </li>
-        {/each}
+        </ul>
 
-        <li class="globe__cluster">
-            <button on:click={() => popinOpen = !popinOpen} aria-label="{popinOpen ? 'Close' : 'Open'} cluster" />
-        </li>
-    </ul>
-
-    {#if popinOpen}
-        <div class="globe__popin" transition:fly={{ y: 16, duration: 500, easing: quartOut }}>
-            <ul>
-                {#each clusterLocations as { name, slug, country }, index}
-                    <li>
-                        <a href="/{country.slug}/{slug}" sveltekit:noscroll tabindex="0">
-                            <!-- <Image
-                                class="flag"
-                                id={country.flag.id}
-                                sizeKey="square-small"
-                                width={32} height={32}
-                                alt="Flag of {country.name}"
-                            /> -->
-                            <dl>
-                                <dt class="title-small">{name}</dt>
-                                <dd class="text-label text-label--small">{country.name}</dd>
-                            </dl>
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-            <button class="close" aria-label="Close" on:click={() => popinOpen = false}>
-                <svg width="9" height="9">
-                    <use xlink:href="#cross" />
-                </svg>
-            </button>
-        </div>
+        {#if popinOpen}
+            <div class="globe__popin" transition:fly={{ y: 16, duration: 500, easing: quartOut }}>
+                <ul>
+                    {#each clusterLocations as { name, slug, country }}
+                        <li>
+                            <a href="/{country.slug}/{slug}" sveltekit:noscroll tabindex="0">
+                                <Image
+                                    class="flag"
+                                    id={country.flag.id}
+                                    sizeKey="square-small"
+                                    width={32} height={32}
+                                    alt="Flag of {country.name}"
+                                />
+                                <dl>
+                                    <dt class="title-small">{name}</dt>
+                                    <dd class="text-label text-label--small">{country.name}</dd>
+                                </dl>
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+                <button class="close" aria-label="Close" on:click={() => popinOpen = false}>
+                    <svg width="9" height="9">
+                        <use xlink:href="#cross" />
+                    </svg>
+                </button>
+            </div>
+        {/if}
     {/if}
 </div>

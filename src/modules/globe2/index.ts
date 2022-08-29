@@ -125,7 +125,7 @@ export class Globe {
         this.addEvents()
 
         // Setup markers
-        if (this.markers) {
+        if (this.enableMarkers && this.markers) {
             this.setupMarkers()
         }
     }
@@ -185,7 +185,8 @@ export class Globe {
                 this.hoveringMarker = false
             }, false)
 
-            console.log(marker)
+            // console.log(marker)
+
             return marker
         })
     }
