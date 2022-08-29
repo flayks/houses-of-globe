@@ -1,5 +1,5 @@
 <style lang="scss">
-    @import "../style/pages/explore";
+    @import "../../style/pages/explore";
 
     h1 {
         text-align: center;
@@ -12,7 +12,6 @@
 </style>
 
 <script lang="ts">
-    import { getContext } from 'svelte'
     // Components
     import PageTransition from '$components/PageTransition.svelte'
 </script>

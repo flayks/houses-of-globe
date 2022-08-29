@@ -67,25 +67,3 @@
 {/if}
 
 <SVGSprite />
-
-
-<script context="module" lang="ts">
-    import type { LoadEvent, LoadOutput } from '@sveltejs/kit'
-
-    export async function load ({ fetch }: LoadEvent): Promise<LoadOutput> {
-        const res = await fetch('/data.json')
-        const data = await res.json()
-
-        if (res) {
-            return {
-                props: {
-                    data,
-                },
-            }
-        }
-
-        return {
-            status: 500,
-        }
-    }
-</script>

@@ -19,41 +19,6 @@
             }
         }
     }
-
-    // Past Issues
-    &__issues {
-        margin: 64px auto 0;
-        padding: 0 20px;
-
-        @include bp (sm) {
-            max-width: 800px;
-            padding: 0;
-            margin-top: 0;
-        }
-
-        // Title
-        h2 {
-            text-align: center;
-        }
-
-        ul {
-            margin-top: 32px;
-
-            @include bp (sm) {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                grid-gap: 24px;
-            }
-        }
-        li {
-            display: block;
-            margin-bottom: 16px;
-
-            @include bp (sm) {
-                margin-bottom: 0;
-            }
-        }
-    }
 }
 
 // Globe

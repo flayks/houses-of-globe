@@ -1,5 +1,5 @@
 <style lang="scss">
-    @import "../style/pages/homepage";
+    @import "../../style/pages/homepage";
 </style>
 
 <script lang="ts">

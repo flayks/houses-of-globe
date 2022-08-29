@@ -1,5 +1,5 @@
 <style lang="scss">
-    @import "../style/pages/subscribe";
+    @import "../../style/pages/subscribe";
 </style>
 
 <script lang="ts">
@@ -10,8 +10,6 @@
     import Heading from '$components/molecules/Heading.svelte'
     import EmailForm from '$components/molecules/EmailForm.svelte'
     import InteractiveGlobe2 from '$components/organisms/InteractiveGlobe2.svelte'
-
-    export let data: any
 
 
     onMount(() => {
