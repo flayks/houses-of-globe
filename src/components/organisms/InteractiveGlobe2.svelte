@@ -25,8 +25,6 @@
     let popinOpen: boolean = false
     let clusterLocations: Marker[] = []
 
-    $: globeResolution = innerWidth > 1440 && window.devicePixelRatio > 1 ? '4k' : '2k'
-
     const { continents, locations } = getContext('global')
     const randomContinent: any = getRandomItem(continents)
     const markers = locations.map(({ name, slug, country, coordinates: { coordinates }}): Marker => ({
@@ -39,10 +37,13 @@
 
 
     onMount(() => {
+        const globeResolution = innerWidth > 1440 && window.devicePixelRatio > 1 ? '4k' : '2k'
+
         globe = new Globe({
             el: globeEl,
             parent: globeParentEl,
             mapFile: `/images/globe-map-${globeResolution}.png`,
+            mapFileDark: `/images/globe-map-dark-${globeResolution}.png`,
             dpr: Math.min(Math.round(window.devicePixelRatio), 2),
             autoRotate: true,
             speed,
@@ -109,7 +110,7 @@
     }
 </script>
 
-<svelte:window
+<svelte:window bind:innerWidth
     on:resize={resize}
 />
 

@@ -96,6 +96,12 @@ export class Globe {
         img.onload = () => (map.image = img)
         img.src = this.options.mapFile
 
+        // Dark map texture
+        const mapDark = new Texture(this.gl)
+        const imgDark = new Image()
+        imgDark.onload = () => (mapDark.image = imgDark)
+        imgDark.src = this.options.mapFileDark
+
         // Create program
         this.program = new Program(this.gl, {
             vertex: VERTEX_SHADER,
@@ -104,7 +110,8 @@ export class Globe {
                 u_dt: { value: 0 },
                 u_lightWorldPosition: { value: this.light }, // Position of the Light
                 u_shininess: { value: 1.0 },
-                map: { value: map }, // Color Map
+                map: { value: map }, // Map Texture
+                mapDark: { value: mapDark } // Map Dark Texture
             },
             transparent: true,
         })
@@ -277,6 +284,7 @@ type Options = {
     el: HTMLElement
     parent: HTMLElement
     mapFile: string
+    mapFileDark: string
     dpr: number
     autoRotate: boolean
     speed: number
