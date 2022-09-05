@@ -44,8 +44,8 @@
     <a
         href={url} class={classes}
         {rel} {target}
-        sveltekit:prefetch={url && isExternal ? null : true}
-        sveltekit:noscroll={isExternal ? null : true}
+        data-sveltekit-prefetch={url && isExternal ? null : true}
+        data-sveltekit-noscroll={isExternal ? null : true}
         {disabled}
         tabindex="0"
         on:click

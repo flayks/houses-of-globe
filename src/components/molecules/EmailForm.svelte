@@ -77,7 +77,7 @@
 
             <div class="newsletter-form__bottom">
                 {#if past}
-                    <a href="/subscribe" class="past-issues" sveltekit:noscroll sveltekit:prefetch>
+                    <a href="/subscribe" class="past-issues" data-sveltekit-noscroll data-sveltekit-prefetch>
                         <svg width="20" height="16" viewBox="0 0 20 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-label="Newsletter icon">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M18 2.346H2a.5.5 0 0 0-.5.5v11.102a.5.5 0 0 0 .5.5h16a.5.5 0 0 0 .5-.5V2.846a.5.5 0 0 0-.5-.5ZM2 .846a2 2 0 0 0-2 2v11.102a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.846a2 2 0 0 0-2-2H2Zm13.75 4.25h-2v3h2v-3Zm-2-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-2ZM3.5 6.5a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6Zm.25 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5Zm1.25 2a.5.5 0 0 0 0 1h6a.5.5 0 1 0 0-1H5Z" />
                         </svg>

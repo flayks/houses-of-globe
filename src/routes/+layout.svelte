@@ -51,7 +51,7 @@
     <ul>
         {#each tempNavLinks as { url, text, globe }}
             <li class:is-active={url === $page.url.pathname}>
-                <a href={url} sveltekit:noscroll>
+                <a href={url} data-sveltekit-noscroll>
                     <strong>{text}</strong>
                     <span>{globe}</span>
                 </a>

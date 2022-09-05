@@ -61,7 +61,7 @@
     <a href="/{location.country.slug}/{location.slug}"
         on:mousemove={handleMouseMove}
         on:mouseleave={handleMouseLeave}
-        sveltekit:noscroll
+        data-sveltekit-noscroll
         tabindex="0"
     >
         <div class="text">

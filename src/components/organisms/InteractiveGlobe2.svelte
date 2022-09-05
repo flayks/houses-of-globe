@@ -125,7 +125,7 @@
         <ul class="globe__markers">
             {#each markers as { name, slug, country, lat, lng }}
                 <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
-                    <a href="/{country.slug}/{slug}" sveltekit:noscroll>
+                    <a href="/{country.slug}/{slug}" data-sveltekit-noscroll>
                         <dl>
                             <dt class="title-small">{name}</dt>
                             <dd class="text-label text-label--small">{country.name}</dd>
@@ -144,7 +144,7 @@
                 <ul>
                     {#each clusterLocations as { name, slug, country }}
                         <li>
-                            <a href="/{country.slug}/{slug}" sveltekit:noscroll tabindex="0">
+                            <a href="/{country.slug}/{slug}" data-sveltekit-noscroll tabindex="0">
                                 <Image
                                     class="flag"
                                     id={country.flag.id}
