@@ -15,6 +15,8 @@ export class Globe {
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
 
+        this.lightAngle = 0
+
         // Parameters
         this.params = {
             autoRotate: options.autoRotate,
@@ -108,8 +110,7 @@ export class Globe {
             fragment: FRAGMENT_SHADER,
             uniforms: {
                 u_dt: { value: 0 },
-                u_lightWorldPosition: { value: this.light }, // Position of the Light
-                u_shininess: { value: 1.0 },
+                rotation: {value: 16.0},
                 map: { value: map }, // Map Texture
                 mapDark: { value: mapDark } // Map Dark Texture
             },
@@ -240,6 +241,12 @@ export class Globe {
         if (this.params.autoRotate) {
             this.mesh.rotation.y += this.params.speed
         }
+
+        //Rotation de l'angle en fonction del'heure
+        this.lightAngle += (this.params.speed * 10)
+        const a = this.lightAngle / 24
+        const angle = a * (2*Math.PI)
+        this.program.uniforms.rotation.value = angle;
 
         // Update controls and renderer
         this.controls.update(this.params)
