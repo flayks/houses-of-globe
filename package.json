@@ -25,13 +25,13 @@
     "tweakpane": "^3.1.0"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^1.0.0-next.69",
-    "@sveltejs/adapter-node": "^1.0.0-next.87",
-    "@sveltejs/adapter-vercel": "^1.0.0-next.71",
-    "@sveltejs/kit": "^1.0.0-next.448",
+    "@sveltejs/adapter-auto": "^1.0.0-next.71",
+    "@sveltejs/adapter-node": "^1.0.0-next.88",
+    "@sveltejs/adapter-vercel": "^1.0.0-next.72",
+    "@sveltejs/kit": "^1.0.0-next.469",
     "@types/animejs": "^3.1.5",
-    "@typescript-eslint/eslint-plugin": "^5.35.1",
-    "@typescript-eslint/parser": "^5.35.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "browserslist": "^4.21.3",
     "cssnano": "^5.1.13",
     "eslint": "^8.23.0",
@@ -41,14 +41,14 @@
     "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^7.8.0",
     "postcss-sort-media-queries": "^4.2.1",
-    "sass": "^1.54.5",
-    "svelte": "^3.49.0",
+    "sass": "^1.54.8",
+    "svelte": "3.49.0",
     "svelte-check": "^2.9.0",
     "svelte-preprocess": "^4.10.7",
     "swell-node": "^4.0.10",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2",
-    "vite": "^3.0.9"
+    "vite": "^3.1.0"
   },
   "type": "module",
   "browserslist": [
