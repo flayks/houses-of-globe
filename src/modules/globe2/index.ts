@@ -16,11 +16,23 @@ export class Globe {
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
 
-        // Calculate sun position right now
-        const location = this.markers[0]
-        const date = new Date()
-        location.date = date
-        this.sunPosition = SunCalc.getPosition(location.date, location.lat, location.lng)
+        // Calculate the current sun position from a given location
+        const locations = [
+            {
+                lat: -37.840935,
+                lng: 144.946457,
+                tz: 'Australia/Melbourne',
+            },
+            {
+                lat: 48.856614,
+                lng: 2.3522219,
+                tz: 'Europe/Paris',
+            }
+        ]
+        const location = locations[0]
+        const now = new Date()
+        const localDate = new Date(now.toLocaleString('en-US', { timeZone: location.tz }))
+        this.sunPosition = SunCalc.getPosition(localDate, location.lat, location.lng)
 
         // Parameters
         this.params = {
@@ -117,6 +129,8 @@ export class Globe {
                 map: { value: map }, // Map Texture
                 mapDark: { value: mapDark }, // Map Dark Texture
                 rotation: { value: 0 },
+                altitude: { value: 0 },
+                azimuth: { value: 0 },
             },
             transparent: true,
         })
@@ -124,10 +138,12 @@ export class Globe {
         // Create light
         // this.light = new Vec3(0, 50, 150)
         this.light = new Vec3(0, 0, 15)
-        // const angle = (this.params.sunAngle / 24) * (2 * Math.PI) - this.params.sunAngleDelta
-        const angle = -this.sunPosition.azimuth * (2 * Math.PI) - this.params.sunAngleDelta
-
+        const angle = (this.params.sunAngle / 24) * (2 * Math.PI) - this.params.sunAngleDelta
+        // const angle = this.sunPosition.azimuth * Math.PI - this.params.sunAngleDelta
         this.program.uniforms.rotation.value = angle
+        this.program.uniforms.altitude.value = this.sunPosition.altitude
+        this.program.uniforms.azimuth.value = this.sunPosition.azimuth
+        console.log(this.sunPosition)
 
         // Create mesh
         this.mesh = new Mesh(this.gl, {

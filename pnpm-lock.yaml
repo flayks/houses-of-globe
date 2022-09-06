@@ -4,7 +4,7 @@ specifiers:
   '@sveltejs/adapter-auto': ^1.0.0-next.71
   '@sveltejs/adapter-node': ^1.0.0-next.88
   '@sveltejs/adapter-vercel': ^1.0.0-next.72
-  '@sveltejs/kit': ^1.0.0-next.471
+  '@sveltejs/kit': ^1.0.0-next.472
   '@types/animejs': ^3.1.5
   '@typescript-eslint/eslint-plugin': ^5.36.2
   '@typescript-eslint/parser': ^5.36.2
@@ -21,7 +21,7 @@ specifiers:
   postcss-focus-visible: ^7.1.0
   postcss-normalize: ^10.0.1
   postcss-preset-env: ^7.8.0
-  postcss-sort-media-queries: ^4.2.1
+  postcss-sort-media-queries: ^4.3.0
   sanitize.css: ^13.0.0
   sass: ^1.54.8
   suncalc: ^1.9.0
@@ -48,7 +48,7 @@ devDependencies:
   '@sveltejs/adapter-auto': 1.0.0-next.71
   '@sveltejs/adapter-node': 1.0.0-next.88
   '@sveltejs/adapter-vercel': 1.0.0-next.72
-  '@sveltejs/kit': 1.0.0-next.471_svelte@3.49.0+vite@3.1.0
+  '@sveltejs/kit': 1.0.0-next.472_svelte@3.49.0+vite@3.1.0
   '@types/animejs': 3.1.5
   '@typescript-eslint/eslint-plugin': 5.36.2_iurrlxgqcgk5svigzxakafpeuu
   '@typescript-eslint/parser': 5.36.2_yqf6kl63nyoq5megxukfnom5rm
@@ -60,7 +60,7 @@ devDependencies:
   postcss-focus-visible: 7.1.0_postcss@8.4.16
   postcss-normalize: 10.0.1_mu2kzpkteq3ketk6piffleamkq
   postcss-preset-env: 7.8.0_postcss@8.4.16
-  postcss-sort-media-queries: 4.2.1_postcss@8.4.16
+  postcss-sort-media-queries: 4.3.0_postcss@8.4.16
   sass: 1.54.8
   svelte: 3.49.0
   svelte-check: 2.9.0_f5urgkboyys3wbiivxj4sltznu
@@ -409,10 +409,11 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.471_svelte@3.49.0+vite@3.1.0:
-    resolution: {integrity: sha512-0uByoMKVXNPckO1MfMIsqOAvCKYAEDaGaVtUYw+6ZvRnTNA77UIGaX9x4RIL9rcc0xQOxTGNR4Xj+0SUCIqmEw==}
+  /@sveltejs/kit/1.0.0-next.472_svelte@3.49.0+vite@3.1.0:
+    resolution: {integrity: sha512-QEMIrcTMWBxOWZAk+eldTGZgCoC9n1iTqULhKba8Xh7qT2Fe67tF1RsA0nBveG4414hODcCa7j1s4uoNmP+mcQ==}
     engines: {node: '>=16.14'}
     hasBin: true
+    requiresBuild: true
     peerDependencies:
       svelte: ^3.44.0
       vite: ^3.1.0
@@ -2934,14 +2935,14 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /postcss-sort-media-queries/4.2.1_postcss@8.4.16:
-    resolution: {integrity: sha512-9VYekQalFZ3sdgcTjXMa0dDjsfBVHXlraYJEMiOJ/2iMmI2JGCMavP16z3kWOaRu8NSaJCTgVpB/IVpH5yT9YQ==}
+  /postcss-sort-media-queries/4.3.0_postcss@8.4.16:
+    resolution: {integrity: sha512-jAl8gJM2DvuIJiI9sL1CuiHtKM4s5aEIomkU8G3LFvbP+p8i7Sz8VV63uieTgoewGqKbi+hxBTiOKJlB35upCg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
-      postcss: ^8.4.4
+      postcss: ^8.4.16
     dependencies:
       postcss: 8.4.16
-      sort-css-media-queries: 2.0.4
+      sort-css-media-queries: 2.1.0
     dev: true
 
   /postcss-svgo/5.1.0_postcss@8.4.16:
@@ -3170,8 +3171,8 @@ packages:
       sourcemap-codec: 1.4.8
     dev: true
 
-  /sort-css-media-queries/2.0.4:
-    resolution: {integrity: sha512-PAIsEK/XupCQwitjv7XxoMvYhT7EAfyzI3hsy/MyDgTvc+Ft55ctdkctJLOy6cQejaIC+zjpUL4djFVm2ivOOw==}
+  /sort-css-media-queries/2.1.0:
+    resolution: {integrity: sha512-IeWvo8NkNiY2vVYdPa27MCQiR0MN0M80johAYFVxWWXQ44KU84WNxjslwBHmc/7ZL2ccwkM7/e6S5aiKZXm7jA==}
     engines: {node: '>= 6.3.0'}
     dev: true
 

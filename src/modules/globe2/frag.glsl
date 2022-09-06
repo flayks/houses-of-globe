@@ -9,7 +9,7 @@ varying vec3 vSunDir;
 
 void main() {
     float cosineAngleSunToNormal = dot(normalize(vNormal), normalize(vSunDir));
-    cosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 1., -2.0, 2.0);
+    cosineAngleSunToNormal = clamp(cosineAngleSunToNormal * 1.0, -1.0, 1.0);
 
     float mixAmount = cosineAngleSunToNormal * 0.666 + 0.333;
     vec3 dayColor = texture2D(map, vUv).rgb;
