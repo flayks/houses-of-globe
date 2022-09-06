@@ -22,6 +22,7 @@
     "focus-visible": "^5.2.0",
     "ogl": "^0.0.97",
     "sanitize.css": "^13.0.0",
+    "suncalc": "^1.9.0",
     "tweakpane": "^3.1.0"
   },
   "devDependencies": {

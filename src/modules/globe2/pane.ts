@@ -15,4 +15,9 @@ export const createPane = (ctx: any) => {
         max: 0.025,
         step: 0.00025,
     })
+    ctx.pane.addInput(ctx.params, 'sunAngleDelta', {
+        label: 'Sun angle delta',
+        min: 0,
+        max: 2 * Math.PI,
+    })
 }

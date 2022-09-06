@@ -1,32 +1,26 @@
+varying vec3 vNormal;
+
 attribute vec2 uv;
 attribute vec3 position;
 attribute vec3 normal;
-uniform mat4 modelMatrix;
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat3 normalMatrix;
-uniform vec3 u_lightWorldPosition;
-uniform vec3 cameraPosition;
+uniform float rotation;
+varying vec2 vUv;
+varying vec3 vSunDir;
 
-varying vec3 v_normal;
-varying vec3 v_surfaceToLight;
-varying vec3 v_surfaceToView;
-varying vec2 v_uv;
 
-void main () {
-    // Pass UV information to Fragment Shader
-    v_uv = uv;
+void main() {
+    vUv = uv;
+    float px = sin(rotation) * 1.0;
+    float pz = cos(rotation) * 1.0;
+    vec3 uLightPos = vec3(px, 0.0, pz);
 
-    // Calculate World Space Normal
-    v_normal = normalMatrix * normal;
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
-    // Compute the world position of the surface
-    vec3 surfaceWorldPosition = mat3(modelMatrix) * position;
+    vNormal = normalMatrix * normal;
+    vSunDir = mat3(normalMatrix) * uLightPos;
 
-    // Vector from the surface, to the light
-    v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
-
-    // Vector from the surface, to the camera
-    v_surfaceToView = cameraPosition - surfaceWorldPosition;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
 }

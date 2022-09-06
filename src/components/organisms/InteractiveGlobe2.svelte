@@ -37,16 +37,17 @@
 
 
     onMount(() => {
-        const globeResolution = innerWidth > 1440 && window.devicePixelRatio > 1 ? '4k' : '2k'
+        const globeResolution = innerWidth > 1440 && window.devicePixelRatio > 1 ? 4 : 2
 
         globe = new Globe({
             el: globeEl,
             parent: globeParentEl,
-            mapFile: `/images/globe-map-${globeResolution}.png`,
-            mapFileDark: `/images/globe-map-dark-${globeResolution}.png`,
+            mapFile: `/images/globe-map-${globeResolution}k.png`,
+            mapFileDark: `/images/globe-map-dark-${globeResolution}k.png`,
             dpr: Math.min(Math.round(window.devicePixelRatio), 2),
             autoRotate: true,
             speed,
+            sunAngle: 2,
             rotationStart: randomContinent.rotation,
             enableMarkers,
             markers,
@@ -54,7 +55,7 @@
         })
 
         // TODO: Define cluster locations and position it
-        clusterLocations = locations.filter((loc: any) => loc.country.slug === 'france')
+        // clusterLocations = locations.filter((loc: any) => loc.country.slug === 'france')
 
         resize()
 

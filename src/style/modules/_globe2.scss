@@ -114,30 +114,30 @@
     }
 
     // Cluster
-    &__cluster {
-        position: absolute;
-        z-index: 10;
-        top: 300px;
-        left: 300px;
-        pointer-events: auto;
+    // &__cluster {
+    //     position: absolute;
+    //     z-index: 10;
+    //     top: 300px;
+    //     left: 300px;
+    //     pointer-events: auto;
 
-        button {
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            border: none;
-            border-radius: 100%;
-            background: rgba($color-secondary, 0.2);
-            transition: box-shadow 0.5s var(--ease-quart), background 0.5s var(--ease-quart);
-        }
+    //     button {
+    //         width: 32px;
+    //         height: 32px;
+    //         padding: 0;
+    //         border: none;
+    //         border-radius: 100%;
+    //         background: rgba($color-secondary, 0.2);
+    //         transition: box-shadow 0.5s var(--ease-quart), background 0.5s var(--ease-quart);
+    //     }
 
-        &:hover {
-            button {
-                background: rgba($color-secondary, 0.3);
-                box-shadow: 0 0 0 8px rgba($color-secondary, 0.1);
-            }
-        }
-    }
+    //     &:hover {
+    //         button {
+    //             background: rgba($color-secondary, 0.3);
+    //             box-shadow: 0 0 0 8px rgba($color-secondary, 0.1);
+    //         }
+    //     }
+    // }
 
     // Popin
     &__popin {

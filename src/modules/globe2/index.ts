@@ -1,8 +1,9 @@
 // @ts-nocheck
 import { Renderer, Camera, Vec3, Orbit, Sphere, Transform, Program, Mesh, Texture } from 'ogl'
+import SunCalc from 'suncalc'
 // Shaders
-import VERTEX_SHADER from '../../modules/globe2/vertex.glsl?raw'
-import FRAGMENT_SHADER from '../../modules/globe2/frag.glsl?raw'
+import VERTEX_SHADER from '$modules/globe2/vertex.glsl?raw'
+import FRAGMENT_SHADER from '$modules/globe2/frag.glsl?raw'
 
 
 export class Globe {
@@ -15,12 +16,20 @@ export class Globe {
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
 
+        // Calculate sun position right now
+        const location = this.markers[0]
+        const date = new Date()
+        location.date = date
+        this.sunPosition = SunCalc.getPosition(location.date, location.lat, location.lng)
+
         // Parameters
         this.params = {
             autoRotate: options.autoRotate,
             speed: options.speed,
             enableMarkers: options.enableMarkers,
             zoom: 1.305,
+            sunAngle: options.sunAngle || 0,
+            sunAngleDelta: 1.8,
         }
 
         // Misc
@@ -85,11 +94,6 @@ export class Globe {
             heightSegments: 64,
         })
 
-        // Create light
-        // TODO: How to create a nicer light that doesn't fade to 0? Just creating a "dark" area where you still can read markers and see countries/continents
-        // this.light = new Vec3(0, 50, 150)
-        this.light = new Vec3(0, 0, 15)
-
         // Add map texture
         const map = new Texture(this.gl)
         const img = new Image()
@@ -111,10 +115,19 @@ export class Globe {
                 u_lightWorldPosition: { value: this.light }, // Position of the Light
                 u_shininess: { value: 1.0 },
                 map: { value: map }, // Map Texture
-                mapDark: { value: mapDark } // Map Dark Texture
+                mapDark: { value: mapDark }, // Map Dark Texture
+                rotation: { value: 0 },
             },
             transparent: true,
         })
+
+        // Create light
+        // this.light = new Vec3(0, 50, 150)
+        this.light = new Vec3(0, 0, 15)
+        // const angle = (this.params.sunAngle / 24) * (2 * Math.PI) - this.params.sunAngleDelta
+        const angle = -this.sunPosition.azimuth * (2 * Math.PI) - this.params.sunAngleDelta
+
+        this.program.uniforms.rotation.value = angle
 
         // Create mesh
         this.mesh = new Mesh(this.gl, {
@@ -248,10 +261,6 @@ export class Globe {
             camera: this.camera,
         })
 
-        // TODO: Update light
-        // this.light.set(this.camera.position)
-        // this.program.uniforms.u_lightWorldPosition.value = [this.mesh.rotation.y * 1, 50, 150]
-
         // Update markers
         this.updateMarkers()
     }
@@ -288,6 +297,7 @@ type Options = {
     dpr: number
     autoRotate: boolean
     speed: number
+    sunAngle: number
     rotationStart?: number
     enableMarkers?: boolean
     markers?: any[]

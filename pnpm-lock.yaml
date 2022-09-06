@@ -24,6 +24,7 @@ specifiers:
   postcss-sort-media-queries: ^4.2.1
   sanitize.css: ^13.0.0
   sass: ^1.54.8
+  suncalc: ^1.9.0
   svelte: 3.49.0
   svelte-check: ^2.9.0
   svelte-preprocess: ^4.10.7
@@ -40,6 +41,7 @@ dependencies:
   focus-visible: 5.2.0
   ogl: 0.0.97
   sanitize.css: 13.0.0
+  suncalc: 1.9.0
   tweakpane: 3.1.0
 
 devDependencies:
@@ -3236,6 +3238,10 @@ packages:
       postcss: 8.4.16
       postcss-selector-parser: 6.0.10
     dev: true
+
+  /suncalc/1.9.0:
+    resolution: {integrity: sha512-vMJ8Byp1uIPoj+wb9c1AdK4jpkSKVAywgHX0lqY7zt6+EWRRC3Z+0Ucfjy/0yxTVO1hwwchZe4uoFNqrIC24+A==}
+    dev: false
 
   /supports-color/7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
