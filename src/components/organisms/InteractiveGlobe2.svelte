@@ -8,8 +8,6 @@
     import { quartOut } from 'svelte/easing'
     import { Globe, type Marker } from '$modules/globe2'
     import { getRandomItem, debounce } from '$utils/functions'
-    // Components
-    // import Image from '$components/atoms/Image.svelte'
 
     export let type: string = undefined
     export let enableMarkers: boolean = true
@@ -60,19 +58,16 @@
         resize()
 
         // Render only if in viewport
-        observer = new IntersectionObserver(entries => {
-            entries.forEach(({ isIntersecting }: IntersectionObserverEntry) => {
-                if (isIntersecting) {
-                    update()
-                    console.log('render globe2')
-                } else {
-                    stop()
-                    console.log('stop globe2')
-                }
-            })
+        observer = new IntersectionObserver(([{ isIntersecting }]) => {
+            if (isIntersecting) {
+                update()
+                console.log('render globe2')
+            } else {
+                stop()
+                console.log('stop globe2')
+            }
         }, {
             threshold: 0,
-            rootMargin: '0px 0px 0px'
         })
         observer.observe(globeEl)
 
@@ -147,13 +142,6 @@
                     {#each clusterLocations as { name, slug, country }}
                         <li>
                             <a href="/{country.slug}/{slug}" data-sveltekit-noscroll tabindex="0">
-                                <!-- <Image
-                                    class="flag"
-                                    id={country.flag.id}
-                                    sizeKey="square-small"
-                                    width={32} height={32}
-                                    alt="Flag of {country.name}"
-                                /> -->
                                 <dl>
                                     <dt class="title-small">{name}</dt>
                                     <dd class="text-label text-label--small">{country.name}</dd>
