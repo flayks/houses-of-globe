@@ -54,7 +54,6 @@ export class Globe {
         if (this.webgl) {
             this.build()
             this.resize()
-            this.render()
         }
 
         // Add GUI panel if activated
@@ -93,7 +92,7 @@ export class Globe {
             autoRotate: false,
             ease: 0.2,
             minPolarAngle: Math.PI / 4,
-            maxPolarAngle: Math.PI / 1.5,
+            maxPolarAngle: Math.PI / 1.85,
         })
 
         // Append canvas to scene
