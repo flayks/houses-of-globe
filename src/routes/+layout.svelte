@@ -26,7 +26,7 @@
      */
     // Store previous page (for photo Viewer close button)
     beforeNavigate(({ from }) => {
-        $previousPage = from.pathname
+        $previousPage = from.url.pathname
     })
 
     // Define page loading from navigating store

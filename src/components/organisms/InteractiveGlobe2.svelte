@@ -8,8 +8,6 @@
     import { quartOut } from 'svelte/easing'
     import { Globe, type Marker } from '$modules/globe2'
     import { getRandomItem, debounce } from '$utils/functions'
-    // Components
-    import Image from '$components/atoms/Image.svelte'
 
     export let type: string = undefined
     export let enableMarkers: boolean = true
@@ -25,7 +23,7 @@
     let popinOpen: boolean = false
     let clusterLocations: Marker[] = []
 
-    const { continents, locations } = getContext('global')
+    const { continents, locations }: any = getContext('global')
     const randomContinent: any = getRandomItem(continents)
     const markers = locations.map(({ name, slug, country, coordinates: { coordinates }}): Marker => ({
         name,
@@ -37,16 +35,17 @@
 
 
     onMount(() => {
-        const globeResolution = innerWidth > 1440 && window.devicePixelRatio > 1 ? '4k' : '2k'
+        const globeResolution = innerWidth > 1440 && window.devicePixelRatio > 1 ? 4 : 2
 
         globe = new Globe({
             el: globeEl,
             parent: globeParentEl,
-            mapFile: `/images/globe-map-${globeResolution}.png`,
-            mapFileDark: `/images/globe-map-dark-${globeResolution}.png`,
+            mapFile: `/images/globe-map-${globeResolution}k.png`,
+            mapFileDark: `/images/globe-map-dark-${globeResolution}k.png`,
             dpr: Math.min(Math.round(window.devicePixelRatio), 2),
             autoRotate: true,
             speed,
+            sunAngle: 2,
             rotationStart: randomContinent.rotation,
             enableMarkers,
             markers,
@@ -54,24 +53,21 @@
         })
 
         // TODO: Define cluster locations and position it
-        clusterLocations = locations.filter((loc: any) => loc.country.slug === 'france')
+        // clusterLocations = locations.filter((loc: any) => loc.country.slug === 'france')
 
         resize()
 
         // Render only if in viewport
-        observer = new IntersectionObserver(entries => {
-            entries.forEach(({ isIntersecting }: IntersectionObserverEntry) => {
-                if (isIntersecting) {
-                    update()
-                    console.log('render globe2')
-                } else {
-                    stop()
-                    console.log('stop globe2')
-                }
-            })
+        observer = new IntersectionObserver(([{ isIntersecting }]) => {
+            if (isIntersecting) {
+                update()
+                console.log('render globe2')
+            } else {
+                stop()
+                console.log('stop globe2')
+            }
         }, {
             threshold: 0,
-            rootMargin: '0px 0px 0px'
         })
         observer.observe(globeEl)
 
@@ -135,9 +131,9 @@
                 </li>
             {/each}
 
-            <li class="globe__cluster">
+            <!-- <li class="globe__cluster">
                 <button on:click={() => popinOpen = !popinOpen} aria-label="{popinOpen ? 'Close' : 'Open'} cluster" />
-            </li>
+            </li> -->
         </ul>
 
         {#if popinOpen}
@@ -146,13 +142,6 @@
                     {#each clusterLocations as { name, slug, country }}
                         <li>
                             <a href="/{country.slug}/{slug}" data-sveltekit-noscroll tabindex="0">
-                                <Image
-                                    class="flag"
-                                    id={country.flag.id}
-                                    sizeKey="square-small"
-                                    width={32} height={32}
-                                    alt="Flag of {country.name}"
-                                />
                                 <dl>
                                     <dt class="title-small">{name}</dt>
                                     <dd class="text-label text-label--small">{country.name}</dd>

@@ -1,8 +1,9 @@
 // @ts-nocheck
 import { Renderer, Camera, Vec3, Orbit, Sphere, Transform, Program, Mesh, Texture } from 'ogl'
+import SunCalc from 'suncalc'
 // Shaders
-import VERTEX_SHADER from '../../modules/globe2/vertex.glsl?raw'
-import FRAGMENT_SHADER from '../../modules/globe2/frag.glsl?raw'
+import VERTEX_SHADER from '$modules/globe2/vertex.glsl?raw'
+import FRAGMENT_SHADER from '$modules/globe2/frag.glsl?raw'
 
 
 export class Globe {
@@ -15,7 +16,23 @@ export class Globe {
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
 
-        this.lightAngle = 0
+        // Calculate the current sun position from a given location
+        const locations = [
+            {
+                lat: -37.840935,
+                lng: 144.946457,
+                tz: 'Australia/Melbourne',
+            },
+            {
+                lat: 48.856614,
+                lng: 2.3522219,
+                tz: 'Europe/Paris',
+            }
+        ]
+        const location = locations[0]
+        const now = new Date()
+        const localDate = new Date(now.toLocaleString('en-US', { timeZone: location.tz }))
+        this.sunPosition = SunCalc.getPosition(localDate, location.lat, location.lng)
 
         // Parameters
         this.params = {
@@ -23,6 +40,8 @@ export class Globe {
             speed: options.speed,
             enableMarkers: options.enableMarkers,
             zoom: 1.305,
+            sunAngle: options.sunAngle || 0,
+            sunAngleDelta: 1.8,
         }
 
         // Misc
@@ -35,7 +54,6 @@ export class Globe {
         if (this.webgl) {
             this.build()
             this.resize()
-            this.render()
         }
 
         // Add GUI panel if activated
@@ -74,7 +92,7 @@ export class Globe {
             autoRotate: false,
             ease: 0.2,
             minPolarAngle: Math.PI / 4,
-            maxPolarAngle: Math.PI / 1.5,
+            maxPolarAngle: Math.PI / 1.85,
         })
 
         // Append canvas to scene
@@ -86,11 +104,6 @@ export class Globe {
             widthSegments: 64,
             heightSegments: 64,
         })
-
-        // Create light
-        // TODO: How to create a nicer light that doesn't fade to 0? Just creating a "dark" area where you still can read markers and see countries/continents
-        // this.light = new Vec3(0, 50, 150)
-        this.light = new Vec3(0, 0, 15)
 
         // Add map texture
         const map = new Texture(this.gl)
@@ -110,12 +123,26 @@ export class Globe {
             fragment: FRAGMENT_SHADER,
             uniforms: {
                 u_dt: { value: 0 },
-                rotation: {value: 16.0},
+                u_lightWorldPosition: { value: this.light }, // Position of the Light
+                u_shininess: { value: 1.0 },
                 map: { value: map }, // Map Texture
-                mapDark: { value: mapDark } // Map Dark Texture
+                mapDark: { value: mapDark }, // Map Dark Texture
+                rotation: { value: 0 },
+                altitude: { value: 0 },
+                azimuth: { value: 0 },
             },
             transparent: true,
         })
+
+        // Create light
+        // this.light = new Vec3(0, 50, 150)
+        this.light = new Vec3(0, 0, 15)
+        const angle = (this.params.sunAngle / 24) * (2 * Math.PI) - this.params.sunAngleDelta
+        // const angle = this.sunPosition.azimuth * Math.PI - this.params.sunAngleDelta
+        this.program.uniforms.rotation.value = angle
+        this.program.uniforms.altitude.value = this.sunPosition.altitude
+        this.program.uniforms.azimuth.value = this.sunPosition.azimuth
+        console.log(this.sunPosition)
 
         // Create mesh
         this.mesh = new Mesh(this.gl, {
@@ -242,22 +269,12 @@ export class Globe {
             this.mesh.rotation.y += this.params.speed
         }
 
-        //Rotation de l'angle en fonction del'heure
-        this.lightAngle += (this.params.speed * 10)
-        const a = this.lightAngle / 24
-        const angle = a * (2*Math.PI)
-        this.program.uniforms.rotation.value = angle;
-
         // Update controls and renderer
         this.controls.update(this.params)
         this.renderer.render({
             scene: this.scene,
             camera: this.camera,
         })
-
-        // TODO: Update light
-        // this.light.set(this.camera.position)
-        // this.program.uniforms.u_lightWorldPosition.value = [this.mesh.rotation.y * 1, 50, 150]
 
         // Update markers
         this.updateMarkers()
@@ -295,6 +312,7 @@ type Options = {
     dpr: number
     autoRotate: boolean
     speed: number
+    sunAngle: number
     rotationStart?: number
     enableMarkers?: boolean
     markers?: any[]
