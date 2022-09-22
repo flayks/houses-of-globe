@@ -14,6 +14,7 @@ export class Globe {
         this.options = options
         this.el = options.el
         this.parent = options.parent
+        console.log(this.el)
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
@@ -163,6 +164,8 @@ export class Globe {
             }
         ]
 
+
+        ///////GLOBE DE TEST POUR LE POSITIONNEMENT//////
         const newCoord = lonlatVec3(tmplocations[0].lat,tmplocations[0].lng)
         console.log(newCoord)
         this.geometry2 = new Sphere(this.gl, { widthSegments: 64 });
@@ -170,11 +173,7 @@ export class Globe {
         sphere2.position.set(newCoord.x, newCoord.y, newCoord.z);
         sphere2.scale.set(0.04);
         sphere2.setParent(this.scene);
-
-        // Start globe angle with a random continent's position
-        // if (this.options.rotationStart) {
-        //     this.mesh.rotation.y = degToRad(this.options.rotationStart * -1) || 0
-        // }
+        //////////////////////////////////////////////////
 
         // Add events
         this.addEvents()
@@ -219,13 +218,10 @@ export class Globe {
     setupMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = lonlatVec3(2.524959550766162, 48.761620643445205)
+            console.log(markerEl)
+            const position = lonlatVec3(marker.lat, marker.lng)
             const screenVector = new Vec3(position.x,position.y,position.z)
             this.camera.project(screenVector)
-            // Define position
-
-            // Scale marker position to fit globe size
-            // marker.position = [position[0] *= 0.5, position[1] *= 0.5, position[2] *= 0.5]
 
             // Position marker
             let posX = ((screenVector[0] + 1) / 2) * this.width
@@ -250,7 +246,7 @@ export class Globe {
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = lonlatVec3(2.524959550766162, 48.761620643445205)
+            const position = lonlatVec3(marker.lat, marker.lng)
             const screenVector = new Vec3(position.x,position.y,position.z)
             this.camera.project(screenVector)
 
@@ -296,7 +292,7 @@ export class Globe {
         })
 
         // Update markers
-        // this.updateMarkers()
+        this.updateMarkers()
     }
 
 
