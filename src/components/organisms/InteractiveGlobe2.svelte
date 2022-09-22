@@ -4,10 +4,13 @@
 
 <script lang="ts">
     import { getContext, onMount } from 'svelte'
-    import { fly } from 'svelte/transition'
+    import { fade, fly as flySvelte } from 'svelte/transition'
     import { quartOut } from 'svelte/easing'
     import { Globe, type Marker } from '$modules/globe2'
     import { getRandomItem, debounce } from '$utils/functions'
+    import { fly, reveal } from '$animations'
+    // Components
+    import SplitText from '$components/SplitText.svelte'
 
     export let type: string = undefined
     export let enableMarkers: boolean = true
@@ -20,8 +23,7 @@
     let globe: any
     let observer: IntersectionObserver
     let animation: number
-    let popinOpen: boolean = false
-    let clusterLocations: Marker[] = []
+    let hoveredMarker: { name: string, country: string } = null
 
     const { continents, locations }: any = getContext('global')
     const randomContinent: any = getRandomItem(continents)
@@ -52,9 +54,6 @@
             pane,
         })
 
-        // TODO: Define cluster locations and position it
-        // clusterLocations = locations.filter((loc: any) => loc.country.slug === 'france')
-
         resize()
 
         // Render only if in viewport
@@ -66,9 +65,7 @@
                 stop()
                 console.log('stop globe2')
             }
-        }, {
-            threshold: 0,
-        })
+        }, { threshold: 0 })
         observer.observe(globeEl)
 
 
@@ -114,48 +111,45 @@
     class:is-cropped={type === 'cropped'}
     style:--width={width ? `${width}px` : null}
 >
-    <div class="globe__inner">
-        <div class="globe__canvas" bind:this={globeEl} />
+    <div class="globe__canvas" bind:this={globeEl}
+        class:is-faded={hoveredMarker}
+    >
+        {#if enableMarkers}
+            <ul class="globe__markers">
+                {#each markers as { name, slug, country, lat, lng }}
+                    <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
+                        <a href="/{country.slug}/{slug}" data-sveltekit-noscroll
+                            on:mouseenter={() => hoveredMarker = { name, country: country.name }}
+                            on:mouseleave={() => hoveredMarker = null}
+                        >
+                            <i />
+                            <span>{name}</span>
+                        </a>
+                    </li>
+                {/each}
+            </ul>
+        {/if}
     </div>
 
-    {#if enableMarkers}
-        <ul class="globe__markers">
-            {#each markers as { name, slug, country, lat, lng }}
-                <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
-                    <a href="/{country.slug}/{slug}" data-sveltekit-noscroll>
-                        <dl>
-                            <dt class="title-small">{name}</dt>
-                            <dd class="text-label text-label--small">{country.name}</dd>
-                        </dl>
-                    </a>
-                </li>
-            {/each}
-
-            <!-- <li class="globe__cluster">
-                <button on:click={() => popinOpen = !popinOpen} aria-label="{popinOpen ? 'Close' : 'Open'} cluster" />
-            </li> -->
-        </ul>
-
-        {#if popinOpen}
-            <div class="globe__popin" transition:fly={{ y: 16, duration: 500, easing: quartOut }}>
-                <ul>
-                    {#each clusterLocations as { name, slug, country }}
-                        <li>
-                            <a href="/{country.slug}/{slug}" data-sveltekit-noscroll tabindex="0">
-                                <dl>
-                                    <dt class="title-small">{name}</dt>
-                                    <dd class="text-label text-label--small">{country.name}</dd>
-                                </dl>
-                            </a>
-                        </li>
-                    {/each}
-                </ul>
-                <button class="close" aria-label="Close" on:click={() => popinOpen = false}>
-                    <svg width="9" height="9">
-                        <use xlink:href="#cross" />
-                    </svg>
-                </button>
-            </div>
-        {/if}
+    {#if hoveredMarker}
+        <div class="globe__location"
+            out:fade={{ duration: 300, easing: quartOut }}
+            use:reveal={{
+                animation: fly,
+                options: {
+                    children: '.char',
+                    stagger: 40,
+                    duration: 1000,
+                    from: '110%',
+                    opacity: false,
+                },
+                threshold: 0,
+            }}
+        >
+            <SplitText text={hoveredMarker.name} mode="chars" class="name" />
+            <p class="country" in:flySvelte={{ y: 16, duration: 800, easing: quartOut, delay: 900 }}>
+                {hoveredMarker.country}
+            </p>
+        </div>
     {/if}
 </div>

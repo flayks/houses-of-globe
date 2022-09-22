@@ -1,8 +1,7 @@
 // @ts-nocheck
 import { Renderer, Camera, Vec3, Orbit, Sphere, Transform, Program, Mesh, Texture } from 'ogl'
 import SunCalc from 'suncalc'
-import { map } from '../../utils/functions/index'
-
+import { map } from '$utils/functions/index'
 // Shaders
 import VERTEX_SHADER from '$modules/globe2/vertex.glsl?raw'
 import FRAGMENT_SHADER from '$modules/globe2/frag.glsl?raw'
@@ -14,7 +13,6 @@ export class Globe {
         this.options = options
         this.el = options.el
         this.parent = options.parent
-        console.log(this.el)
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
@@ -48,7 +46,7 @@ export class Globe {
             autoRotate: options.autoRotate,
             speed: options.speed,
             enableMarkers: options.enableMarkers,
-            zoom: 1.305,
+            zoom: 1.3075,
             sunAngle: options.sunAngle || 0,
             sunAngleDelta: 1.8,
         }
@@ -89,8 +87,6 @@ export class Globe {
 
         // Create camera
         this.camera = new Camera(this.gl)
-        // TODO: Why 1.315? Is there a way to calculate this number?
-
         this.camera.position.set(0, 0, this.params.zoom)
 
         // Create controls
@@ -140,7 +136,6 @@ export class Globe {
                 altitude: { value: 0 },
                 azimuth: { value: 0 },
             },
-            transparent: true,
             cullFace: null,
         })
 
@@ -153,31 +148,11 @@ export class Globe {
             geometry: this.geometry,
             program: this.program,
         })
-
         this.mesh.setParent(this.scene)
-
-       const tmplocations = [
-            {
-                lat: 48.761620643445205,
-                lng: 2.524959550766162,
-                tz: 'Europe/Paris',
-            }
-        ]
-
-
-        ///////GLOBE DE TEST POUR LE POSITIONNEMENT//////
-        const newCoord = lonlatVec3(tmplocations[0].lat,tmplocations[0].lng)
-        console.log(newCoord)
-        this.geometry2 = new Sphere(this.gl, { widthSegments: 64 });
-        const sphere2 = new Mesh(this.gl, { geometry: this.geometry2, program: this.program });
-        sphere2.position.set(newCoord.x, newCoord.y, newCoord.z);
-        sphere2.scale.set(0.04);
-        sphere2.setParent(this.scene);
-        //////////////////////////////////////////////////
 
         // Add events
         this.addEvents()
-        this.enableMarkers = true
+
         // Setup markers
         if (this.enableMarkers && this.markers) {
             this.setupMarkers()
@@ -218,8 +193,7 @@ export class Globe {
     setupMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            console.log(markerEl)
-            const position = lonlatVec3(marker.lat, marker.lng)
+            const position = latLonToVec3(marker.lat, marker.lng)
             const screenVector = new Vec3(position.x,position.y,position.z)
             this.camera.project(screenVector)
 
@@ -237,7 +211,6 @@ export class Globe {
                 this.hoveringMarker = false
             }, false)
 
-
             return marker
         })
     }
@@ -246,12 +219,13 @@ export class Globe {
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = lonlatVec3(marker.lat, marker.lng)
-            const screenVector = new Vec3(position.x,position.y,position.z)
+            const position = latLonToVec3(marker.lat, marker.lng)
+
+            const screenVector = new Vec3(position.x, position.y, position.z)
             this.camera.project(screenVector)
 
-            let posX = ((screenVector[0] + 1) / 2) * this.width
-            let posY = (1. - (screenVector[1] + 1) / 2) * this.height
+            const posX = ((screenVector[0] + 1) / 2) * this.width
+            const posY = (1. - (screenVector[1] + 1) / 2) * this.height
 
             markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
         })
@@ -345,7 +319,6 @@ export type Marker = {
     }
     lat: number
     lng: number
-    position?: number[]
 }
 
 
@@ -367,15 +340,15 @@ function WebGLSupport () {
 /**
  * Convert lat/lng to Vec3
  */
-const lonlatVec3 = (lat:number, lon:number) => {
-    const phi = (90-lat)*(Math.PI/180)
-    const theta = (lon+180)*(Math.PI/180)
+const latLonToVec3 = (lat: number, lng: number) => {
+    const phi = (90 - lat) * (Math.PI / 180)
+    const theta = (lng + 180) * (Math.PI / 180)
 
     const x = -((0.5) * Math.sin(phi) * Math.cos(theta))
     const z = ((0.5) * Math.sin(phi) * Math.sin(theta))
     const y = ((0.5) * Math.cos(phi))
 
-    return {x,y,z}
+    return new Vec3(x,y,z)
 }
 
 /**
