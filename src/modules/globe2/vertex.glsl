@@ -16,8 +16,8 @@ void main() {
     vUv = uv;
     // float px = sin(rotation) * 1.0;
     // float pz = cos(rotation) * 1.0;
-    float px = sin(-azimuth) * 1.0;
-    float pz = cos(-altitude) * 1.0;
+    float px = sin(0.0) * 1.0;
+    float pz = cos(0.0) * 1.0;
     vec3 uLightPos = vec3(px, 0.0, pz);
 
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);

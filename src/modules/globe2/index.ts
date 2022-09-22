@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { Renderer, Camera, Vec3, Orbit, Sphere, Transform, Program, Mesh, Texture } from 'ogl'
 import SunCalc from 'suncalc'
+import { map } from '../../utils/functions/index'
+
 // Shaders
 import VERTEX_SHADER from '$modules/globe2/vertex.glsl?raw'
 import FRAGMENT_SHADER from '$modules/globe2/frag.glsl?raw'
@@ -29,10 +31,16 @@ export class Globe {
                 tz: 'Europe/Paris',
             }
         ]
-        const location = locations[0]
+
+        const location = locations[1]
         const now = new Date()
         const localDate = new Date(now.toLocaleString('en-US', { timeZone: location.tz }))
+
         this.sunPosition = SunCalc.getPosition(localDate, location.lat, location.lng)
+
+        var times = SunCalc.getTimes(new Date(), location.lat, location.lng);
+        var sunrisePos = SunCalc.getPosition(times.sunrise, location.lat, location.lng);
+        this.sunriseAzimuth = sunrisePos.azimuth * 180 / Math.PI;
 
         // Parameters
         this.params = {
@@ -81,6 +89,7 @@ export class Globe {
         // Create camera
         this.camera = new Camera(this.gl)
         // TODO: Why 1.315? Is there a way to calculate this number?
+
         this.camera.position.set(0, 0, this.params.zoom)
 
         // Create controls
@@ -106,9 +115,9 @@ export class Globe {
         })
 
         // Add map texture
-        const map = new Texture(this.gl)
+        const mapWorld = new Texture(this.gl)
         const img = new Image()
-        img.onload = () => (map.image = img)
+        img.onload = () => (mapWorld.image = img)
         img.src = this.options.mapFile
 
         // Dark map texture
@@ -117,48 +126,59 @@ export class Globe {
         imgDark.onload = () => (mapDark.image = imgDark)
         imgDark.src = this.options.mapFileDark
 
+        const azimuthValue = map(this.sunriseAzimuth, -180, 180, -Math.PI, Math.PI);
+
         // Create program
         this.program = new Program(this.gl, {
             vertex: VERTEX_SHADER,
             fragment: FRAGMENT_SHADER,
             uniforms: {
                 u_dt: { value: 0 },
-                u_lightWorldPosition: { value: this.light }, // Position of the Light
-                u_shininess: { value: 1.0 },
-                map: { value: map }, // Map Texture
+                map: { value: mapWorld }, // Map Texture
                 mapDark: { value: mapDark }, // Map Dark Texture
-                rotation: { value: 0 },
                 altitude: { value: 0 },
                 azimuth: { value: 0 },
             },
             transparent: true,
+            cullFace: null,
         })
 
         // Create light
-        // this.light = new Vec3(0, 50, 150)
-        this.light = new Vec3(0, 0, 15)
-        const angle = (this.params.sunAngle / 24) * (2 * Math.PI) - this.params.sunAngleDelta
-        // const angle = this.sunPosition.azimuth * Math.PI - this.params.sunAngleDelta
-        this.program.uniforms.rotation.value = angle
         this.program.uniforms.altitude.value = this.sunPosition.altitude
         this.program.uniforms.azimuth.value = this.sunPosition.azimuth
-        console.log(this.sunPosition)
 
         // Create mesh
         this.mesh = new Mesh(this.gl, {
             geometry: this.geometry,
             program: this.program,
         })
+
         this.mesh.setParent(this.scene)
 
+       const tmplocations = [
+            {
+                lat: 48.761620643445205,
+                lng: 2.524959550766162,
+                tz: 'Europe/Paris',
+            }
+        ]
+
+        const newCoord = lonlatVec3(tmplocations[0].lat,tmplocations[0].lng)
+        console.log(newCoord)
+        this.geometry2 = new Sphere(this.gl, { widthSegments: 64 });
+        const sphere2 = new Mesh(this.gl, { geometry: this.geometry2, program: this.program });
+        sphere2.position.set(newCoord.x, newCoord.y, newCoord.z);
+        sphere2.scale.set(0.04);
+        sphere2.setParent(this.scene);
+
         // Start globe angle with a random continent's position
-        if (this.options.rotationStart) {
-            this.mesh.rotation.y = degToRad(this.options.rotationStart * -1) || 0
-        }
+        // if (this.options.rotationStart) {
+        //     this.mesh.rotation.y = degToRad(this.options.rotationStart * -1) || 0
+        // }
 
         // Add events
         this.addEvents()
-
+        this.enableMarkers = true
         // Setup markers
         if (this.enableMarkers && this.markers) {
             this.setupMarkers()
@@ -199,16 +219,17 @@ export class Globe {
     setupMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-
+            const position = lonlatVec3(2.524959550766162, 48.761620643445205)
+            const screenVector = new Vec3(position.x,position.y,position.z)
+            this.camera.project(screenVector)
             // Define position
-            const position = lonlatVec3(marker.lng, marker.lat)
 
             // Scale marker position to fit globe size
-            marker.position = [position[0] *= 0.5, position[1] *= 0.5, position[2] *= 0.5]
+            // marker.position = [position[0] *= 0.5, position[1] *= 0.5, position[2] *= 0.5]
 
             // Position marker
-            const posX = (marker.position[0] + 1) * (this.width / this.params.zoom)
-            const posY = (1 - marker.position[1]) * (this.height / this.params.zoom)
+            let posX = ((screenVector[0] + 1) / 2) * this.width
+            let posY = (1. - (screenVector[1] + 1) / 2) * this.height
             markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
 
             // Entering marker
@@ -220,7 +241,6 @@ export class Globe {
                 this.hoveringMarker = false
             }, false)
 
-            // console.log(marker)
 
             return marker
         })
@@ -229,16 +249,15 @@ export class Globe {
     // Update markers
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
-            // const markerEl = this.getMarker(marker.slug)
-            // const screenVector = new Vec3(0,0,0)
-            // screenVector.copy(marker.position)
-            // this.camera.project(screenVector)
+            const markerEl = this.getMarker(marker.slug)
+            const position = lonlatVec3(2.524959550766162, 48.761620643445205)
+            const screenVector = new Vec3(position.x,position.y,position.z)
+            this.camera.project(screenVector)
 
+            let posX = ((screenVector[0] + 1) / 2) * this.width
+            let posY = (1. - (screenVector[1] + 1) / 2) * this.height
 
-            // let posX = (screenVector.x + 1) * (this.options.width / this.params.zoom)
-            // // // posX /= this.mesh.rotation.y
-            // let posY = (1 - screenVector.y) * (this.options.height / this.params.zoom)
-            // markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
         })
     }
 
@@ -265,9 +284,9 @@ export class Globe {
         if (!this.dragging && this.hoveringMarker) return
 
         // Update globe rotation
-        if (this.params.autoRotate) {
-            this.mesh.rotation.y += this.params.speed
-        }
+        // if (this.params.autoRotate) {
+        //     this.mesh.rotation.y += this.params.speed
+        // }
 
         // Update controls and renderer
         this.controls.update(this.params)
@@ -277,7 +296,7 @@ export class Globe {
         })
 
         // Update markers
-        this.updateMarkers()
+        // this.updateMarkers()
     }
 
 
@@ -352,14 +371,15 @@ function WebGLSupport () {
 /**
  * Convert lat/lng to Vec3
  */
-function lonlatVec3 (longitude: number, latitude: number) {
-    const lat = latitude * Math.PI / 180
-    const lng = -longitude * Math.PI / 180
-    return new Vec3(
-        Math.cos(lat) * Math.cos(lng),
-        Math.sin(lat),
-        Math.cos(lat) * Math.sin(lng)
-    )
+const lonlatVec3 = (lat:number, lon:number) => {
+    const phi = (90-lat)*(Math.PI/180)
+    const theta = (lon+180)*(Math.PI/180)
+
+    const x = -((0.5) * Math.sin(phi) * Math.cos(theta))
+    const z = ((0.5) * Math.sin(phi) * Math.sin(theta))
+    const y = ((0.5) * Math.cos(phi))
+
+    return {x,y,z}
 }
 
 /**
