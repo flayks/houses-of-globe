@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Renderer, Camera, Vec3, Vec2, Mat4, Orbit, Sphere, Transform, Program, Mesh, Texture } from 'ogl'
+import { Renderer, Camera, Vec3, Orbit, Sphere, Transform, Program, Mesh, Texture } from 'ogl'
 import SunCalc from 'suncalc'
 import { map } from '$utils/functions/index'
 // Shaders
@@ -16,9 +16,6 @@ export class Globe {
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
-        this.currMarkerScrollOffset = 0
-        this.markersScrollOffset = 0
-
 
         // Calculate the current sun position from a given location
         const locations = [
@@ -92,18 +89,19 @@ export class Globe {
         // Create camera
         this.camera = new Camera(this.gl)
         this.camera.position.set(0, 0, this.params.zoom)
+
         // Create controls
         this.controls = new Orbit(this.camera, {
             element: this.el,
+            target: new Vec3(0,0,0),
             enableZoom: false,
             enablePan: false,
-            // autoRotate: this.options.autoRotate,
-            // autoRotateSpeed: 0.05,
+            autoRotate: this.options.autoRotate,
+            autoRotateSpeed: 0.05,
             ease: 0.2,
             minPolarAngle: Math.PI / 4,
             maxPolarAngle: Math.PI / 1.85,
         })
-
 
         // Append canvas to scene
         this.el.appendChild(this.gl.canvas)
@@ -114,7 +112,7 @@ export class Globe {
             widthSegments: 64,
             heightSegments: 64,
         })
-        console.log(this.geometry)
+
         // Add map texture
         const mapWorld = new Texture(this.gl)
         const img = new Image()
@@ -235,11 +233,10 @@ export class Globe {
             const posX = ((screenVector[0] + 1) / 2) * this.width
             const posY = (1. - (screenVector[1] + 1) / 2) * this.height
 
-            const cc = checkPinVisibility(this.camera, this.mesh,screenVector,markerEl)
-
             markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
 
-
+            // Hide marker if behind globe
+            markerEl.classList.toggle('is-behind', screenVector[2] > 0.82)
         })
     }
 
@@ -357,36 +354,6 @@ const latLonToVec3 = (lat: number, lng: number) => {
 
     return new Vec3(x,y,z)
 }
-
-const checkPinVisibility = (camera, globe,screenVector, marker) => {
-    let V = new Vec3()
-    V.set(screenVector[0], screenVector[1], screenVector[2])
-
-    // var cameraToEarth = globe.position.clone().sub(camera.position);
-    // var L = Math.sqrt(Math.pow(cameraToEarth.len(), 2) - Math.pow(0.5, 2));
-
-    // var cameraToPin = V.clone().sub(camera.position);
-
-    // if(cameraToPin.len() > L) {
-    //     marker.style.opacity = 1
-    // } else {
-    //     marker.style.opacity = 0
-    // }
-
-    var cNormal = new Vec3()
-    var cPosition = new Vec3()
-    var mat4 = new Mat4()
-    cNormal.copy(V).normalize().applyMatrix3(globe.normalMatrix);
-    cPosition.copy(V).applyMatrix4(mat4.multiply(camera.worldMatrix, globe.worldMatrix));
-    let d = cPosition.negate().normalize().dot(cNormal);
-    d = smoothstep(0.2, 0.7, d);
-    marker.style.opacity = d;
-}
-
-const smoothstep = (min, max, value) => {
-  var x = Math.max(0, Math.min(1, (value-min)/(max-min)));
-  return x*x*(3 - 2*x);
-};
 
 /**
  * Convert Degrees to Radians
