@@ -234,6 +234,9 @@ export class Globe {
             const posY = (1. - (screenVector[1] + 1) / 2) * this.height
 
             markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+
+            // Hide marker if behind globe
+            markerEl.classList.toggle('is-behind', screenVector[2] > 0.82)
         })
     }
 
