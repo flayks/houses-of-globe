@@ -260,7 +260,7 @@ export class Globe {
         if (!this.dragging && this.hoveringMarker) return
 
         // Update controls and renderer
-        this.controls.update(this.params)
+        this.controls.update()
         this.renderer.render({
             scene: this.scene,
             camera: this.camera,
