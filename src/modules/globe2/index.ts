@@ -33,9 +33,11 @@ export class Globe {
 
         const location = locations[1]
         const now = new Date()
+
         const localDate = new Date(now.toLocaleString('en-US', { timeZone: location.tz }))
 
         this.sunPosition = SunCalc.getPosition(localDate, location.lat, location.lng)
+
 
         var times = SunCalc.getTimes(new Date(), location.lat, location.lng);
         var sunrisePos = SunCalc.getPosition(times.sunrise, location.lat, location.lng);
@@ -125,8 +127,8 @@ export class Globe {
         imgDark.onload = () => (mapDark.image = imgDark)
         imgDark.src = this.options.mapFileDark
 
-        const azimuthValue = map(this.sunriseAzimuth, -180, 180, -Math.PI, Math.PI);
-
+        const azimuthValue = this.sunPosition.azimuth * Math.PI / 180
+        const altitudeValue = this.sunPosition.altitude * Math.PI / 90
         // Create program
         this.program = new Program(this.gl, {
             vertex: VERTEX_SHADER,
@@ -135,8 +137,8 @@ export class Globe {
                 u_dt: { value: 0 },
                 map: { value: mapWorld }, // Map Texture
                 mapDark: { value: mapDark }, // Map Dark Texture
-                altitude: { value: 0 },
-                azimuth: { value: 0 },
+                altitude: { value: altitudeValue },
+                azimuth: { value: azimuthValue },
             },
             cullFace: null,
         })
