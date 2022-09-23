@@ -15,7 +15,7 @@
     export let type: string = undefined
     export let enableMarkers: boolean = true
     export let speed: number = 0.003
-    export let pane: boolean = import.meta.env.DEV
+    export let pane: boolean = false // import.meta.env.DEV
     export let width: number = undefined
 
     let innerWidth: number

@@ -95,7 +95,8 @@ export class Globe {
             target: new Vec3(0,0,0),
             enableZoom: false,
             enablePan: false,
-            autoRotate: false,
+            autoRotate: this.options.autoRotate,
+            autoRotateSpeed: 0.05,
             ease: 0.2,
             minPolarAngle: Math.PI / 4,
             maxPolarAngle: Math.PI / 1.85,
@@ -154,7 +155,7 @@ export class Globe {
         this.addEvents()
 
         // Setup markers
-        if (this.enableMarkers && this.markers) {
+        if (this.options.enableMarkers && this.markers) {
             this.setupMarkers()
         }
     }
@@ -208,7 +209,9 @@ export class Globe {
             }, false)
             // Leaving marker
             markerEl.addEventListener('mouseleave', () => {
-                this.hoveringMarker = false
+                setTimeout(() => {
+                    this.hoveringMarker = false
+                }, 200)
             }, false)
 
             return marker
@@ -252,11 +255,6 @@ export class Globe {
     render () {
         // Stop render if not dragging but hovering marker
         if (!this.dragging && this.hoveringMarker) return
-
-        // Update globe rotation
-        // if (this.params.autoRotate) {
-        //     this.mesh.rotation.y += this.params.speed
-        // }
 
         // Update controls and renderer
         this.controls.update(this.params)
