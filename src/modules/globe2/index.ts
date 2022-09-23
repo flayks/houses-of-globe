@@ -53,6 +53,7 @@ export class Globe {
 
         // Misc
         this.hoveringMarker = false
+        this.hoveringMarkerTimeout = 0
         this.dragging = false
         this.webgl = WebGLSupport() !== null
         this.pane = undefined
@@ -206,12 +207,14 @@ export class Globe {
             // Entering marker
             markerEl.addEventListener('mouseenter', () => {
                 this.hoveringMarker = true
+                clearTimeout(this.hoveringMarkerTimeout)
             }, false)
+
             // Leaving marker
             markerEl.addEventListener('mouseleave', () => {
-                setTimeout(() => {
+                this.hoveringMarkerTimeout = setTimeout(() => {
                     this.hoveringMarker = false
-                }, 200)
+                }, 300)
             }, false)
 
             return marker
