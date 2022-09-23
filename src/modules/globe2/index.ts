@@ -16,6 +16,10 @@ export class Globe {
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
+        this.rotationStartAngle = {
+            lat: degToRad(-this.options.rotationStart.lat) || 0,
+            lng: degToRad(-this.options.rotationStart.lng) || 0,
+        }
 
         // Calculate the current sun position from a given location
         const locations = [
@@ -61,7 +65,7 @@ export class Globe {
         // Run globe after check for WebGL support
         if (this.webgl) {
             this.build()
-            this.resize()
+            requestAnimationFrame(() => this.resize())
         }
 
         // Add GUI panel if activated
@@ -152,6 +156,11 @@ export class Globe {
         })
         this.mesh.setParent(this.scene)
 
+        // Start globe angle with a random continent's position
+        if (this.options.rotationStart) {
+            this.mesh.rotation.y = this.rotationStartAngle.lat
+        }
+
         // Add events
         this.addEvents()
 
@@ -195,7 +204,7 @@ export class Globe {
     setupMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = latLonToVec3(marker.lat, marker.lng)
+            const position = latLonToVec3(marker.lat, marker.lng, this.rotationStartAngle.lat, this.rotationStartAngle.lng)
             const screenVector = new Vec3(position.x,position.y,position.z)
             this.camera.project(screenVector)
 
@@ -225,7 +234,7 @@ export class Globe {
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = latLonToVec3(marker.lat, marker.lng)
+            const position = latLonToVec3(marker.lat, marker.lng, this.rotationStartAngle.lat)
 
             const screenVector = new Vec3(position.x, position.y, position.z)
             this.camera.project(screenVector)
@@ -343,9 +352,9 @@ function WebGLSupport () {
 /**
  * Convert lat/lng to Vec3
  */
-const latLonToVec3 = (lat: number, lng: number) => {
+const latLonToVec3 = (lat: number, lng: number, latOffset: number = 0, lngOffset: number = 0) => {
     const phi = (90 - lat) * (Math.PI / 180)
-    const theta = (lng + 180) * (Math.PI / 180)
+    const theta = (lng + 180) * (Math.PI / 180) + latOffset
 
     const x = -((0.5) * Math.sin(phi) * Math.cos(theta))
     const z = ((0.5) * Math.sin(phi) * Math.sin(theta))
