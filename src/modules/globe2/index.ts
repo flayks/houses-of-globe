@@ -200,8 +200,8 @@ export class Globe {
             this.camera.project(screenVector)
 
             // Position marker
-            let posX = ((screenVector[0] + 1) / 2) * this.width
-            let posY = (1. - (screenVector[1] + 1) / 2) * this.height
+            const posX = ((screenVector[0] + 1) / 2) * this.width
+            const posY = (1. - (screenVector[1] + 1) / 2) * this.height
             markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
 
             // Entering marker
@@ -245,7 +245,6 @@ export class Globe {
      * Resize method
      */
     resize () {
-        // this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.renderer.setSize(this.width, this.height)
