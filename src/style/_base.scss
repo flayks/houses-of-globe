@@ -110,11 +110,9 @@ input[type="text"], input[type="email"], input[type="password"] {
 .temp-nav {
     position: fixed;
     z-index: 100;
-    top: 0;
+    top: 24px;
     left: 0;
     width: 100%;
-    background: $color-primary;
-    padding: 40px 0;
 
     ul {
         display: flex;
@@ -128,10 +126,10 @@ input[type="text"], input[type="email"], input[type="password"] {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        height: 64px;
-        padding: 12px 24px;
+        height: 40px;
+        padding: 0 20px;
         text-align: center;
-        font-size: rem(20px);
+        font-size: rem(16px);
         font-weight: 500;
         color: #fff;
         text-decoration: none;

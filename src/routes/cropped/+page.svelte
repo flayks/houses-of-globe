@@ -7,8 +7,6 @@
     import anime, { type AnimeTimelineInstance } from 'animejs'
     // Components
     import PageTransition from '$components/PageTransition.svelte'
-    import Heading from '$components/molecules/Heading.svelte'
-    import EmailForm from '$components/molecules/EmailForm.svelte'
     import InteractiveGlobe2 from '$components/organisms/InteractiveGlobe2.svelte'
 
 
@@ -51,17 +49,9 @@
 </script>
 
 <svelte:head>
-    <title>Subscribe</title>
+    <title>Cropped Globe</title>
 </svelte:head>
 
 <PageTransition name="subscribe">
-    <div class="subscribe__top">
-        <Heading
-            text="Sign up below if you wish to be notified when new photos or locations are added and limited prints become available on our shop."
-        />
-
-        <EmailForm />
-    </div>
-
     <InteractiveGlobe2 type="cropped" />
 </PageTransition>
