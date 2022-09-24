@@ -204,14 +204,9 @@ export class Globe {
     setupMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = latLonToVec3(marker.lat, marker.lng, this.rotationStartAngle.lat, this.rotationStartAngle.lng)
-            const screenVector = new Vec3(position.x,position.y,position.z)
-            this.camera.project(screenVector)
 
-            // Position marker
-            const posX = ((screenVector[0] + 1) / 2) * this.width
-            const posY = (1. - (screenVector[1] + 1) / 2) * this.height
-            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+            // Update marker position
+            this.updateMarkerPosition(marker, markerEl)
 
             // Entering marker
             markerEl.addEventListener('mouseenter', () => {
@@ -230,22 +225,28 @@ export class Globe {
         })
     }
 
+    // Update marker position
+    updateMarkerPosition (marker: Marker, markerEl: HTMLElement) {
+        const position = latLonToVec3(marker.lat, marker.lng, this.rotationStartAngle.lat, this.rotationStartAngle.lng)
+        const screenVector = new Vec3(position.x, position.y, position.z)
+        this.camera.project(screenVector)
+
+        // Position marker
+        const posX = ((screenVector[0] + 1) / 2) * this.width
+        const posY = (1. - (screenVector[1] + 1) / 2) * this.height
+        markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+
+        // Hide marker if behind globe
+        markerEl.classList.toggle('is-behind', screenVector[2] > 0.82)
+    }
+
     // Update markers
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = latLonToVec3(marker.lat, marker.lng, this.rotationStartAngle.lat)
 
-            const screenVector = new Vec3(position.x, position.y, position.z)
-            this.camera.project(screenVector)
-
-            const posX = ((screenVector[0] + 1) / 2) * this.width
-            const posY = (1. - (screenVector[1] + 1) / 2) * this.height
-
-            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
-
-            // Hide marker if behind globe
-            markerEl.classList.toggle('is-behind', screenVector[2] > 0.82)
+            // Update marker position
+            this.updateMarkerPosition(marker, markerEl)
         })
     }
 
