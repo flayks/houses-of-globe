@@ -22,8 +22,29 @@ export const createPane = (ctx: any) => {
         max: 2,
         step: 0.05,
     })
+
+
+    /**
+     * Markers
+     */
+    if (ctx.markers && ctx.markers.length > 0) {
+        const markers = ctx.pane.addFolder({
+            title: 'Markers',
+        })
+        markers.addInput(ctx.params, 'enableMarkers', {
+            label: 'Enable markers',
+        })
+    }
+
+
+    /**
+     * Others
+     */
+    const misc = ctx.pane.addFolder({
+        title: 'Misc',
     })
-    ctx.pane.addInput(ctx.params, 'sunAngleDelta', {
+    // Sun position
+    misc.addInput(ctx.params, 'sunAngleDelta', {
         label: 'Sun angle delta',
         min: 0,
         max: 2 * Math.PI,

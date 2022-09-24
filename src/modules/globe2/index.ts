@@ -156,7 +156,7 @@ export class Globe {
         this.addEvents()
 
         // Setup markers
-        if (this.options.enableMarkers && this.markers) {
+        if (this.markers) {
             this.setupMarkers()
         }
     }
@@ -229,7 +229,7 @@ export class Globe {
         markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
 
         // Hide marker if behind globe
-        markerEl.classList.toggle('is-behind', screenVector[2] > 0.82)
+        markerEl.classList.toggle('is-hidden', screenVector[2] > 0.82)
     }
 
     // Update markers
@@ -239,6 +239,14 @@ export class Globe {
 
             // Update marker position
             this.updateMarkerPosition(marker, markerEl)
+        })
+    }
+
+    // Disable markers
+    hideMarkers () {
+        this.markers.forEach((marker: Marker) => {
+            const markerEl = this.getMarker(marker.slug)
+            markerEl.classList.add('is-hidden')
         })
     }
 
@@ -277,7 +285,11 @@ export class Globe {
         })
 
         // Update markers
-        this.updateMarkers()
+        if (this.params.enableMarkers) {
+            this.updateMarkers()
+        } else {
+            this.hideMarkers()
+        }
     }
 
 

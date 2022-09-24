@@ -114,21 +114,19 @@
     <div class="globe__canvas" bind:this={globeEl}
         class:is-faded={hoveredMarker}
     >
-        {#if enableMarkers}
-            <ul class="globe__markers">
-                {#each markers as { name, slug, country, lat, lng }}
-                    <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
-                        <a href="/{country.slug}/{slug}" data-sveltekit-noscroll
-                            on:mouseenter={() => hoveredMarker = { name, country: country.name }}
-                            on:mouseleave={() => hoveredMarker = null}
-                        >
-                            <i />
-                            <span>{name}</span>
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-        {/if}
+        <ul class="globe__markers">
+            {#each markers as { name, slug, country, lat, lng }}
+                <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
+                    <a href="/{country.slug}/{slug}" data-sveltekit-noscroll
+                        on:mouseenter={() => hoveredMarker = { name, country: country.name }}
+                        on:mouseleave={() => hoveredMarker = null}
+                    >
+                        <i />
+                        <span>{name}</span>
+                    </a>
+                </li>
+            {/each}
+        </ul>
     </div>
 
     {#if hoveredMarker}
