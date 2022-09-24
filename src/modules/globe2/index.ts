@@ -113,8 +113,8 @@ export class Globe {
         // Create scene and geometry
         this.scene = new Transform()
         this.geometry = new Sphere(this.gl, {
-            widthSegments: 64,
-            heightSegments: 64,
+            widthSegments: 75,
+            heightSegments: 75,
         })
 
         // Add map texture
