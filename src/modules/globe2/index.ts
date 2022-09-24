@@ -34,9 +34,7 @@ export class Globe {
                 tz: 'Europe/Paris',
             }
         ]
-
         const location = locations[1]
-        const now = new Date()
         const localDate = new Date(now.toLocaleString('en-US', { timeZone: location.tz }))
 
         this.sunPosition = SunCalc.getPosition(localDate, location.lat, location.lng)
@@ -58,6 +56,7 @@ export class Globe {
         // Misc
         this.hoveringMarker = false
         this.hoveringMarkerTimeout = 0
+        this.lastFrame = now()
         this.dragging = false
         this.webgl = WebGLSupport() !== null
         this.pane = undefined
@@ -65,7 +64,7 @@ export class Globe {
         // Run globe after check for WebGL support
         if (this.webgl) {
             this.build()
-            requestAnimationFrame(() => this.resize())
+            this.resize()
         }
 
         // Add GUI panel if activated
@@ -97,11 +96,8 @@ export class Globe {
         // Create controls
         this.controls = new Orbit(this.camera, {
             element: this.el,
-            target: new Vec3(0,0,0),
             enableZoom: false,
             enablePan: false,
-            // autoRotate: this.options.autoRotate,
-            // autoRotateSpeed: 0.05,
             ease: 0.2,
             minPolarAngle: Math.PI / 4,
             maxPolarAngle: Math.PI / 1.85,
@@ -264,12 +260,12 @@ export class Globe {
      * Update method
      */
     render () {
-        // Stop render if not dragging but hovering marker
-        if (!this.dragging && this.hoveringMarker) return
+        const delta = (now() - this.lastFrame) / 1000
+        this.lastFrame = now()
 
-        // Rotate globe
-        if (this.params.autoRotate) {
-            this.globeRotation.lat += this.params.speed
+        // Rotate globe if not dragging neither hovering marker
+        if (this.params.autoRotate && !this.hoveringMarker) {
+            this.globeRotation.lat += this.params.speed * delta
             this.globe.rotation.y = this.globeRotation.lat
         }
 
@@ -370,3 +366,9 @@ const latLonToVec3 = (lat: number, lng: number) => {
  * Convert Degrees to Radians
  */
 const degToRad = (deg: number) => deg * Math.PI / 180
+
+
+/**
+ * Get current timestamp (performance or Date)
+ */
+const now = () => (typeof performance === 'undefined' ? Date : performance).now()
