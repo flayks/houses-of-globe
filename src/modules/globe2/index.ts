@@ -132,7 +132,7 @@ export class Globe {
         const azimuthValue = map(this.sunriseAzimuth, -180, 180, -Math.PI, Math.PI);
 
         // Create program
-        this.program = new Program(this.gl, {
+        const program = new Program(this.gl, {
             vertex: VERTEX_SHADER,
             fragment: FRAGMENT_SHADER,
             uniforms: {
@@ -146,19 +146,19 @@ export class Globe {
         })
 
         // Create light
-        this.program.uniforms.altitude.value = this.sunPosition.altitude
-        this.program.uniforms.azimuth.value = this.sunPosition.azimuth
+        program.uniforms.altitude.value = this.sunPosition.altitude
+        program.uniforms.azimuth.value = this.sunPosition.azimuth
 
-        // Create mesh
-        this.mesh = new Mesh(this.gl, {
+        // Create globe mesh
+        this.globe = new Mesh(this.gl, {
             geometry: this.geometry,
-            program: this.program,
+            program,
         })
-        this.mesh.setParent(this.scene)
+        this.globe.setParent(this.scene)
 
         // Start globe angle with a random continent's position
         if (this.options.rotationStart) {
-            this.mesh.rotation.y = this.rotationStartAngle.lat
+            this.globe.rotation.y = this.rotationStartAngle.lat
         }
 
         // Add events
@@ -273,7 +273,7 @@ export class Globe {
 
         // Rotate globe
         if (this.params.autoRotate) {
-            this.mesh.rotation.y += this.params.speed
+            this.globe.rotation.y += this.params.speed
         }
 
         // Update controls and renderer
@@ -297,7 +297,7 @@ export class Globe {
         this.gl = null
         this.scene = null
         this.camera = null
-        this.mesh = null
+        this.globe = null
         this.renderer = null
         this.controls.remove()
 
