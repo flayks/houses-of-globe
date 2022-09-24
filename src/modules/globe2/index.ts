@@ -16,7 +16,7 @@ export class Globe {
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
-        this.rotationStartAngle = {
+        this.globeRotation = {
             lat: degToRad(-this.options.rotationStart.lat) || 0,
             lng: degToRad(-this.options.rotationStart.lng) || 0,
         }
@@ -156,11 +156,6 @@ export class Globe {
         })
         this.globe.setParent(this.scene)
 
-        // Start globe angle with a random continent's position
-        if (this.options.rotationStart) {
-            this.globe.rotation.y = this.rotationStartAngle.lat
-        }
-
         // Add events
         this.addEvents()
 
@@ -227,8 +222,9 @@ export class Globe {
 
     // Update marker position
     updateMarkerPosition (marker: Marker, markerEl: HTMLElement) {
-        const position = latLonToVec3(marker.lat, marker.lng, this.rotationStartAngle.lat, this.rotationStartAngle.lng)
+        const position = latLonToVec3(marker.lat, marker.lng)
         const screenVector = new Vec3(position.x, position.y, position.z)
+        screenVector.applyMatrix4(this.globe.worldMatrix)
         this.camera.project(screenVector)
 
         // Position marker
@@ -273,7 +269,8 @@ export class Globe {
 
         // Rotate globe
         if (this.params.autoRotate) {
-            this.globe.rotation.y += this.params.speed
+            this.globeRotation.lat += this.params.speed
+            this.globe.rotation.y = this.globeRotation.lat
         }
 
         // Update controls and renderer
@@ -358,9 +355,9 @@ function WebGLSupport () {
 /**
  * Convert lat/lng to Vec3
  */
-const latLonToVec3 = (lat: number, lng: number, latOffset: number = 0, lngOffset: number = 0) => {
+const latLonToVec3 = (lat: number, lng: number) => {
     const phi = (90 - lat) * (Math.PI / 180)
-    const theta = (lng + 180) * (Math.PI / 180) + latOffset
+    const theta = (lng + 180) * (Math.PI / 180)
 
     const x = -((0.5) * Math.sin(phi) * Math.cos(theta))
     const z = ((0.5) * Math.sin(phi) * Math.sin(theta))
