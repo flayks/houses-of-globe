@@ -100,8 +100,8 @@ export class Globe {
             target: new Vec3(0,0,0),
             enableZoom: false,
             enablePan: false,
-            autoRotate: this.options.autoRotate,
-            autoRotateSpeed: 0.05,
+            // autoRotate: this.options.autoRotate,
+            // autoRotateSpeed: 0.05,
             ease: 0.2,
             minPolarAngle: Math.PI / 4,
             maxPolarAngle: Math.PI / 1.85,
@@ -270,6 +270,11 @@ export class Globe {
     render () {
         // Stop render if not dragging but hovering marker
         if (!this.dragging && this.hoveringMarker) return
+
+        // Rotate globe
+        if (this.params.autoRotate) {
+            this.mesh.rotation.y += this.params.speed
+        }
 
         // Update controls and renderer
         this.controls.update()
