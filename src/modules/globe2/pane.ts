@@ -34,6 +34,9 @@ export const createPane = (ctx: any) => {
         markers.addInput(ctx.params, 'enableMarkers', {
             label: 'Enable markers',
         })
+        markers.addInput(ctx.params, 'enableMarkersLinks', {
+            label: 'Interactive',
+        })
     }
 
 

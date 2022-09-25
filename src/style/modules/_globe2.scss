@@ -67,6 +67,9 @@
         pointer-events: none;
         text-align: center;
 
+        :global(.char) {
+            transition: none;
+        }
         :global(.name) {
             font-family: $font-serif;
             font-weight: 100;
@@ -151,6 +154,11 @@
             i {
                 transform: scale(0) translateZ(0);
             }
+        }
+
+        // State: Is disabled
+        &:global(.is-disabled a) {
+            pointer-events: none;
         }
     }
 

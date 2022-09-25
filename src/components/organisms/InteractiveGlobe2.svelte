@@ -12,10 +12,13 @@
     // Components
     import SplitText from '$components/SplitText.svelte'
 
+    const isDev = import.meta.env.DEV
+
     export let type: string = undefined
     export let enableMarkers: boolean = true
+    export let enableMarkersLinks: boolean = true
     export let speed: number = 0.1
-    export let pane: boolean = import.meta.env.DEV
+    export let pane: boolean = isDev
     export let width: number = undefined
 
     let innerWidth: number
@@ -50,6 +53,7 @@
             sunAngle: 2,
             rotationStart: randomContinent.rotation,
             enableMarkers,
+            enableMarkersLinks: enableMarkersLinks && type !== 'cropped',
             markers,
             pane,
         })
@@ -60,10 +64,16 @@
         observer = new IntersectionObserver(([{ isIntersecting }]) => {
             if (isIntersecting) {
                 update()
-                console.log('render globe2')
+
+                if (isDev) {
+                    console.log('globe: render/start')
+                }
             } else {
                 stop()
-                console.log('stop globe2')
+
+                if (isDev) {
+                    console.log('globe: render/stop')
+                }
             }
         }, { threshold: 0 })
         observer.observe(globeEl)

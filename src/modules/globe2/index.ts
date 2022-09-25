@@ -17,8 +17,8 @@ export class Globe {
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
         this.globeRotation = {
-            lat: degToRad(-this.options.rotationStart.lat) || 0,
-            lng: degToRad(-this.options.rotationStart.lng) || 0,
+            lat: degToRad(-this.options.rotationStart) || 0,
+            // lng: degToRad(-this.options.rotationStart.lng) || 0,
         }
 
         // Calculate the current sun position from a given location
@@ -48,12 +48,14 @@ export class Globe {
             autoRotate: options.autoRotate,
             speed: options.speed,
             enableMarkers: options.enableMarkers,
+            enableMarkersLinks: options.enableMarkersLinks,
             zoom: 1.3075,
             sunAngle: options.sunAngle || 0,
             sunAngleDelta: 1.8,
         }
 
         // Misc
+        this.isDev = import.meta.env.DEV
         this.hoveringMarker = false
         this.hoveringMarkerTimeout = 0
         this.lastFrame = now()
@@ -218,9 +220,12 @@ export class Globe {
 
     // Update marker position
     updateMarkerPosition (marker: Marker, markerEl: HTMLElement) {
+        // Get vec3 position from lat/long
         const position = latLonToVec3(marker.lat, marker.lng)
         const screenVector = new Vec3(position.x, position.y, position.z)
+        // Apply transformation to marker from globe world matrix
         screenVector.applyMatrix4(this.globe.worldMatrix)
+        // Then project marker on camera
         this.camera.project(screenVector)
 
         // Position marker
@@ -236,13 +241,20 @@ export class Globe {
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-
             // Update marker position
             this.updateMarkerPosition(marker, markerEl)
         })
     }
 
-    // Disable markers
+    // Enable or disable markers
+    enableMarkers (state: boolean) {
+        this.markers.forEach((marker: Marker) => {
+            const markerEl = this.getMarker(marker.slug)
+            markerEl.classList.toggle('is-disabled', !state)
+        })
+    }
+
+    // Hide markers
     hideMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
@@ -287,6 +299,8 @@ export class Globe {
         // Update markers
         if (this.params.enableMarkers) {
             this.updateMarkers()
+            // Enable or disable interactivity
+            this.enableMarkers(this.params.enableMarkersLinks)
         } else {
             this.hideMarkers()
         }
@@ -297,8 +311,6 @@ export class Globe {
      * Destroy
      */
     destroy () {
-        console.log('destroy globe2')
-
         this.gl = null
         this.scene = null
         this.camera = null
@@ -308,6 +320,9 @@ export class Globe {
 
         if (this.pane) {
             this.pane.dispose()
+        }
+        if (this.isDev) {
+            console.log('globe: destroy')
         }
     }
 }
@@ -327,6 +342,7 @@ type Options = {
     sunAngle: number
     rotationStart?: number
     enableMarkers?: boolean
+    enableMarkersLinks?: boolean
     markers?: any[]
     pane?: boolean
 }
