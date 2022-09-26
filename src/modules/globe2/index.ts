@@ -16,6 +16,10 @@ export class Globe {
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.markers = options.markers || []
+        this.globeRotation = {
+            lat: degToRad(-this.options.rotationStart) || 0,
+            // lng: degToRad(-this.options.rotationStart.lng) || 0,
+        }
 
         // Calculate the current sun position from a given location
         const locations = [
@@ -30,14 +34,10 @@ export class Globe {
                 tz: 'Europe/Paris',
             }
         ]
-
         const location = locations[1]
-        const now = new Date()
-
         const localDate = new Date(now.toLocaleString('en-US', { timeZone: location.tz }))
 
         this.sunPosition = SunCalc.getPosition(localDate, location.lat, location.lng)
-
 
         var times = SunCalc.getTimes(new Date(), location.lat, location.lng);
         var sunrisePos = SunCalc.getPosition(times.sunrise, location.lat, location.lng);
@@ -48,14 +48,17 @@ export class Globe {
             autoRotate: options.autoRotate,
             speed: options.speed,
             enableMarkers: options.enableMarkers,
+            enableMarkersLinks: options.enableMarkersLinks,
             zoom: 1.3075,
             sunAngle: options.sunAngle || 0,
             sunAngleDelta: 1.8,
         }
 
         // Misc
+        this.isDev = import.meta.env.DEV
         this.hoveringMarker = false
         this.hoveringMarkerTimeout = 0
+        this.lastFrame = now()
         this.dragging = false
         this.webgl = WebGLSupport() !== null
         this.pane = undefined
@@ -95,11 +98,8 @@ export class Globe {
         // Create controls
         this.controls = new Orbit(this.camera, {
             element: this.el,
-            target: new Vec3(0,0,0),
             enableZoom: false,
             enablePan: false,
-            autoRotate: this.options.autoRotate,
-            autoRotateSpeed: 0.05,
             ease: 0.2,
             minPolarAngle: Math.PI / 4,
             maxPolarAngle: Math.PI / 1.85,
@@ -111,8 +111,8 @@ export class Globe {
         // Create scene and geometry
         this.scene = new Transform()
         this.geometry = new Sphere(this.gl, {
-            widthSegments: 64,
-            heightSegments: 64,
+            widthSegments: 75,
+            heightSegments: 75,
         })
 
         // Add map texture
@@ -127,38 +127,38 @@ export class Globe {
         imgDark.onload = () => (mapDark.image = imgDark)
         imgDark.src = this.options.mapFileDark
 
-        const azimuthValue = this.sunPosition.azimuth * Math.PI / 180
-        const altitudeValue = this.sunPosition.altitude * Math.PI / 90
+        const azimuthValue = map(this.sunriseAzimuth, -180, 180, -Math.PI, Math.PI);
+
         // Create program
-        this.program = new Program(this.gl, {
+        const program = new Program(this.gl, {
             vertex: VERTEX_SHADER,
             fragment: FRAGMENT_SHADER,
             uniforms: {
                 u_dt: { value: 0 },
                 map: { value: mapWorld }, // Map Texture
                 mapDark: { value: mapDark }, // Map Dark Texture
-                altitude: { value: altitudeValue },
-                azimuth: { value: azimuthValue },
+                altitude: { value: 0 },
+                azimuth: { value: 0 },
             },
             cullFace: null,
         })
 
         // Create light
-        this.program.uniforms.altitude.value = this.sunPosition.altitude
-        this.program.uniforms.azimuth.value = this.sunPosition.azimuth
+        program.uniforms.altitude.value = this.sunPosition.altitude
+        program.uniforms.azimuth.value = this.sunPosition.azimuth
 
-        // Create mesh
-        this.mesh = new Mesh(this.gl, {
+        // Create globe mesh
+        this.globe = new Mesh(this.gl, {
             geometry: this.geometry,
-            program: this.program,
+            program,
         })
-        this.mesh.setParent(this.scene)
+        this.globe.setParent(this.scene)
 
         // Add events
         this.addEvents()
 
         // Setup markers
-        if (this.options.enableMarkers && this.markers) {
+        if (this.markers) {
             this.setupMarkers()
         }
     }
@@ -197,14 +197,9 @@ export class Globe {
     setupMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = latLonToVec3(marker.lat, marker.lng)
-            const screenVector = new Vec3(position.x,position.y,position.z)
-            this.camera.project(screenVector)
 
-            // Position marker
-            let posX = ((screenVector[0] + 1) / 2) * this.width
-            let posY = (1. - (screenVector[1] + 1) / 2) * this.height
-            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+            // Update marker position
+            this.updateMarkerPosition(marker, markerEl)
 
             // Entering marker
             markerEl.addEventListener('mouseenter', () => {
@@ -223,22 +218,47 @@ export class Globe {
         })
     }
 
+    // Update marker position
+    updateMarkerPosition (marker: Marker, markerEl: HTMLElement) {
+        // Get vec3 position from lat/long
+        const position = latLonToVec3(marker.lat, marker.lng)
+        const screenVector = new Vec3(position.x, position.y, position.z)
+        // Apply transformation to marker from globe world matrix
+        screenVector.applyMatrix4(this.globe.worldMatrix)
+        // Then project marker on camera
+        this.camera.project(screenVector)
+
+        // Position marker
+        const posX = ((screenVector[0] + 1) / 2) * this.width
+        const posY = (1. - (screenVector[1] + 1) / 2) * this.height
+        markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+
+        // Hide marker if behind globe
+        markerEl.classList.toggle('is-hidden', screenVector[2] > 0.82)
+    }
+
     // Update markers
     updateMarkers () {
         this.markers.forEach((marker: Marker) => {
             const markerEl = this.getMarker(marker.slug)
-            const position = latLonToVec3(marker.lat, marker.lng)
+            // Update marker position
+            this.updateMarkerPosition(marker, markerEl)
+        })
+    }
 
-            const screenVector = new Vec3(position.x, position.y, position.z)
-            this.camera.project(screenVector)
+    // Enable or disable markers
+    enableMarkers (state: boolean) {
+        this.markers.forEach((marker: Marker) => {
+            const markerEl = this.getMarker(marker.slug)
+            markerEl.classList.toggle('is-disabled', !state)
+        })
+    }
 
-            const posX = ((screenVector[0] + 1) / 2) * this.width
-            const posY = (1. - (screenVector[1] + 1) / 2) * this.height
-
-            markerEl.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
-
-            // Hide marker if behind globe
-            markerEl.classList.toggle('is-behind', screenVector[2] > 0.82)
+    // Hide markers
+    hideMarkers () {
+        this.markers.forEach((marker: Marker) => {
+            const markerEl = this.getMarker(marker.slug)
+            markerEl.classList.add('is-hidden')
         })
     }
 
@@ -247,7 +267,6 @@ export class Globe {
      * Resize method
      */
     resize () {
-        // this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.width = this.el.offsetWidth
         this.height = this.el.offsetHeight
         this.renderer.setSize(this.width, this.height)
@@ -261,8 +280,14 @@ export class Globe {
      * Update method
      */
     render () {
-        // Stop render if not dragging but hovering marker
-        if (!this.dragging && this.hoveringMarker) return
+        const delta = (now() - this.lastFrame) / 1000
+        this.lastFrame = now()
+
+        // Rotate globe if not dragging neither hovering marker
+        if (this.params.autoRotate && !this.hoveringMarker) {
+            this.globeRotation.lat += this.params.speed * delta
+            this.globe.rotation.y = this.globeRotation.lat
+        }
 
         // Update controls and renderer
         this.controls.update()
@@ -272,7 +297,13 @@ export class Globe {
         })
 
         // Update markers
-        this.updateMarkers()
+        if (this.params.enableMarkers) {
+            this.updateMarkers()
+            // Enable or disable interactivity
+            this.enableMarkers(this.params.enableMarkersLinks)
+        } else {
+            this.hideMarkers()
+        }
     }
 
 
@@ -280,17 +311,18 @@ export class Globe {
      * Destroy
      */
     destroy () {
-        console.log('destroy globe2')
-
         this.gl = null
         this.scene = null
         this.camera = null
-        this.mesh = null
+        this.globe = null
         this.renderer = null
         this.controls.remove()
 
         if (this.pane) {
             this.pane.dispose()
+        }
+        if (this.isDev) {
+            console.log('globe: destroy')
         }
     }
 }
@@ -310,6 +342,7 @@ type Options = {
     sunAngle: number
     rotationStart?: number
     enableMarkers?: boolean
+    enableMarkersLinks?: boolean
     markers?: any[]
     pane?: boolean
 }
@@ -361,3 +394,9 @@ const latLonToVec3 = (lat: number, lng: number) => {
  * Convert Degrees to Radians
  */
 const degToRad = (deg: number) => deg * Math.PI / 180
+
+
+/**
+ * Get current timestamp (performance or Date)
+ */
+const now = () => (typeof performance === 'undefined' ? Date : performance).now()

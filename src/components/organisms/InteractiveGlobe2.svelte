@@ -12,10 +12,13 @@
     // Components
     import SplitText from '$components/SplitText.svelte'
 
+    const isDev = import.meta.env.DEV
+
     export let type: string = undefined
     export let enableMarkers: boolean = true
-    export let speed: number = 0.003
-    export let pane: boolean = false // import.meta.env.DEV
+    export let enableMarkersLinks: boolean = true
+    export let speed: number = 0.1
+    export let pane: boolean = isDev
     export let width: number = undefined
 
     let innerWidth: number
@@ -50,6 +53,7 @@
             sunAngle: 2,
             rotationStart: randomContinent.rotation,
             enableMarkers,
+            enableMarkersLinks: enableMarkersLinks && type !== 'cropped',
             markers,
             pane,
         })
@@ -60,10 +64,16 @@
         observer = new IntersectionObserver(([{ isIntersecting }]) => {
             if (isIntersecting) {
                 update()
-                console.log('render globe2')
+
+                if (isDev) {
+                    console.log('globe: render/start')
+                }
             } else {
                 stop()
-                console.log('stop globe2')
+
+                if (isDev) {
+                    console.log('globe: render/stop')
+                }
             }
         }, { threshold: 0 })
         observer.observe(globeEl)
@@ -114,21 +124,19 @@
     <div class="globe__canvas" bind:this={globeEl}
         class:is-faded={hoveredMarker}
     >
-        {#if enableMarkers}
-            <ul class="globe__markers">
-                {#each markers as { name, slug, country, lat, lng }}
-                    <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
-                        <a href="/{country.slug}/{slug}" data-sveltekit-noscroll
-                            on:mouseenter={() => hoveredMarker = { name, country: country.name }}
-                            on:mouseleave={() => hoveredMarker = null}
-                        >
-                            <i />
-                            <span>{name}</span>
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-        {/if}
+        <ul class="globe__markers">
+            {#each markers as { name, slug, country, lat, lng }}
+                <li class="globe__marker" data-location={slug} data-lat={lat} data-lng={lng}>
+                    <a href="/{country.slug}/{slug}" data-sveltekit-noscroll
+                        on:mouseenter={() => hoveredMarker = { name, country: country.name }}
+                        on:mouseleave={() => hoveredMarker = null}
+                    >
+                        <i />
+                        <span>{name}</span>
+                    </a>
+                </li>
+            {/each}
+        </ul>
     </div>
 
     {#if hoveredMarker}

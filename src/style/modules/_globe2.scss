@@ -67,6 +67,9 @@
         pointer-events: none;
         text-align: center;
 
+        :global(.char) {
+            transition: none;
+        }
         :global(.name) {
             font-family: $font-serif;
             font-weight: 100;
@@ -128,7 +131,8 @@
                 height: 10px;
                 border-radius: 32px;
                 background: $color-secondary;
-                transition: box-shadow 0.4s var(--ease-quart);
+                transition: box-shadow 0.4s var(--ease-quart), transform 0.4s var(--ease-quart);
+                transform-origin: 50% 50%;
             }
             // Name
             span {
@@ -143,9 +147,18 @@
             }
         }
 
-        // State: Is behind
-        &:global(.is-behind) {
+        // State: Is hidden
+        &:global(.is-hidden) {
             opacity: 0;
+
+            i {
+                transform: scale(0) translateZ(0);
+            }
+        }
+
+        // State: Is disabled
+        &:global(.is-disabled a) {
+            pointer-events: none;
         }
     }
 

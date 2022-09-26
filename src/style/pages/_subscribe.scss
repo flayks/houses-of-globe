@@ -1,8 +1,0 @@
-// Globe
-:global(.subscribe .globe-cropped) {
-    margin-top: 96px;
-
-    @include bp (sm) {
-        margin-top: 156px;
-    }
-}
