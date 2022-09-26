@@ -35,12 +35,15 @@ export class Globe {
             }
         ]
         const location = locations[1]
-        const localDate = new Date(now.toLocaleString('en-US', { timeZone: location.tz }))
+        const localDate = new Date(new Date().toLocaleString('en-US', { timeZone: location.tz }))
 
         this.sunPosition = SunCalc.getPosition(localDate, location.lat, location.lng)
+        console.log(localDate)
 
         var times = SunCalc.getTimes(new Date(), location.lat, location.lng);
         var sunrisePos = SunCalc.getPosition(times.sunrise, location.lat, location.lng);
+
+
         this.sunriseAzimuth = sunrisePos.azimuth * 180 / Math.PI;
 
         // Parameters
@@ -127,30 +130,34 @@ export class Globe {
         imgDark.onload = () => (mapDark.image = imgDark)
         imgDark.src = this.options.mapFileDark
 
-        const azimuthValue = map(this.sunriseAzimuth, -180, 180, -Math.PI, Math.PI);
-
         // Create program
-        const program = new Program(this.gl, {
+        this.program = new Program(this.gl, {
             vertex: VERTEX_SHADER,
             fragment: FRAGMENT_SHADER,
             uniforms: {
                 u_dt: { value: 0 },
                 map: { value: mapWorld }, // Map Texture
                 mapDark: { value: mapDark }, // Map Dark Texture
-                altitude: { value: 0 },
-                azimuth: { value: 0 },
+                sunPosition: {value: new Vec3(0,0,0)}
             },
             cullFace: null,
         })
 
-        // Create light
-        program.uniforms.altitude.value = this.sunPosition.altitude
-        program.uniforms.azimuth.value = this.sunPosition.azimuth
+        //LIGHT
+        // dayTime = 0 - 24h ----> 0 - 1
+        const dayTime = 1
+        const d = degToRad(360/dayTime)
+        const sunPos = new Vec3(
+            Math.cos( d ),
+            Math.sin( d ) * Math.sin( 0 ),
+            Math.sin( d ) * Math.cos( 0 ))
+
+        this.program.uniforms.sunPosition.value = sunPos
 
         // Create globe mesh
         this.globe = new Mesh(this.gl, {
             geometry: this.geometry,
-            program,
+            program: this.program,
         })
         this.globe.setParent(this.scene)
 
@@ -395,6 +402,10 @@ const latLonToVec3 = (lat: number, lng: number) => {
  */
 const degToRad = (deg: number) => deg * Math.PI / 180
 
+const radToDeg = (radians) => {
+  var pi = Math.PI;
+  return radians * (180/pi);
+}
 
 /**
  * Get current timestamp (performance or Date)

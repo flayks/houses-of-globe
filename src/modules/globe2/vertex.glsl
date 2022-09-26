@@ -6,8 +6,7 @@ attribute vec3 normal;
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat3 normalMatrix;
-uniform float azimuth;
-uniform float altitude;
+uniform vec3 sunPosition;
 varying vec2 vUv;
 varying vec3 vSunDir;
 
@@ -16,9 +15,9 @@ void main() {
     vUv = uv;
     // float px = sin(rotation) * 1.0;
     // float pz = cos(rotation) * 1.0;
-    float px = -cos(azimuth) * 1.0;
-    float py = sin(altitude) * 1.0;
-    float pz = 1.0;
+    float px = sunPosition.x;
+    float py = sunPosition.y;
+    float pz = sunPosition.z;
     vec3 uLightPos = vec3(px, py, pz);
 
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
